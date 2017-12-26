@@ -11,7 +11,7 @@ use Drupal\Core\TypedData\Plugin\DataType\ItemList;
  *
  * @FieldFormatter(
  *   id = "ejikznayka_scenario_default",
- *   label = @Translation("Scenario"),
+ *   label = @Translation("View scenario contents"),
  *   field_types = {
  *     "ejikznayka_scenario"
  *   }

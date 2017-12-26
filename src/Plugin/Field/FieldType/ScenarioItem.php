@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
+use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
 
 /**
  * Plugin implementation of the 'scenario' field type.
@@ -29,11 +30,13 @@ class ScenarioItem extends FieldItemBase {
       ->setDescription(t("Sequence of numbers to be displayed during the lesson."))
       ->setRequired(TRUE);
 
-    /*$properties['positions'] = DataDefinition::create('list')
-      ->setItemDefinition(DataDefinition::create('integer'))
+    $properties['count'] = DataDefinition::create('integer')
+      ->setLabel(t('Number of numbers'));
+
+    $properties['positions'] = ListDataDefinition::create('ejikznayka_position')
       ->setLabel(t('Positions'))
       ->setDescription(t("Positions of displayed numbers on the screen."));
-*/
+
     return $properties;
   }
 
@@ -48,12 +51,49 @@ class ScenarioItem extends FieldItemBase {
           'type' => 'blob',
           'serialize' => TRUE,
         ],
-        /*'positions' => [
+        'positions' => [
           'description' => "Serialized position css values.",
           'type' => 'blob',
           'serialize' => TRUE,
-        ],*/
+        ],
       ],
     ];
   }
+
+  /**
+   * {@inheritdoc}
+   * Generate random sequence based on field settings.
+   */
+  public function preSave() {
+    /** @var \Drupal\Core\TypedData\TypedDataManager $data_manager */
+    //$data_manager = \Drupal::service('typed_data_manager');
+    //$position_definition = $data_manager->createDataDefinition('ejikznayka_position');
+    $this->count;
+    $sequence = $positions = [];
+    for ($i = 0; $i < $this->count; $i++) {
+      $sequence[$i] = mt_rand(1, 100);
+      // Generate random position.
+      $position = [];
+      $top = mt_rand(0, 50);
+      $left = mt_rand(0, 50);
+      if (mt_rand(1, 2) == 1) {
+        $position['top'] = $top;
+      }
+      else {
+        $position['bottom'] = $top;
+      }
+      if (mt_rand(1, 2) == 1) {
+        $position['left'] = $left;
+      }
+      else {
+        $position['right'] = $left;
+      }
+      //$positions[] = $data_manager->create($position_definition, $position);
+      $positions[] = $position;
+    }
+
+    $this->set('sequence', $sequence);
+    $this->set('positions', $positions);
+  }
+
 }
