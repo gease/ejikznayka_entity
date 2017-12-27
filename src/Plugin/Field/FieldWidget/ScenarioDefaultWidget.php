@@ -44,9 +44,10 @@ class ScenarioDefaultWidget extends WidgetBase {
       '#type' => 'number',
       '#title' => $this->t('Number of numbers'),
       '#size' => 3,
-      '#min' => 2,
+      '#min' => 1,
       '#max' => 50,
-      '#default_value' => is_array($items[$delta]->sequence) ? count($items[$delta]->sequence) : '',
+      '#default_value' => is_array($items[$delta]->sequence) ? count($items[$delta]->sequence) : 1,
+      //  '#default_value' => $this->getSetting('count'),
       '#required' => TRUE,
     ];
     return $element;
@@ -54,9 +55,32 @@ class ScenarioDefaultWidget extends WidgetBase {
 
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $return_values = [];
-    foreach ($values as $key => $value) {
-      $return_values[$key] = $value;
-      $return_values[$key]['sequence'] = [1, 2, 3];
+    foreach ($values as $delta => $item_values) {
+      $sequence = $positions = [];
+      for ($i = 0; $i < $item_values['count']; $i++) {
+        $sequence[$i] = mt_rand(1, 100);
+        // Generate random position.
+        $position = [];
+        $top = mt_rand(0, 50);
+        $left = mt_rand(0, 50);
+        if (mt_rand(1, 2) == 1) {
+          $position['top'] = $top;
+        }
+        else {
+          $position['bottom'] = $top;
+        }
+        if (mt_rand(1, 2) == 1) {
+          $position['left'] = $left;
+        }
+        else {
+          $position['right'] = $left;
+        }
+        $positions[] = $position;
+      }
+
+      $return_values[$delta]['sequence'] = $sequence;
+      $return_values[$delta]['positions'] = $positions;
+      $return_values[$delta]['count'] = $item_values['count'];
     }
     return $return_values;
   }

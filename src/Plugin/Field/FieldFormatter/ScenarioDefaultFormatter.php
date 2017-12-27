@@ -29,7 +29,7 @@ class ScenarioDefaultFormatter extends FormatterBase {
       $elements[$delta] = [
         '#type' => 'markup',
         '#title' => $this->t('Sequence'),
-        '#markup' => $item->getString(),
+        '#markup' => $item->get('sequence')->getString(),
       ];
     }
 
