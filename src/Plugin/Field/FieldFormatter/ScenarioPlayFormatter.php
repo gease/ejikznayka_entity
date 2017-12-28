@@ -5,6 +5,7 @@ namespace Drupal\ejikznayka\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Plugin implementation of the 'ejikznayka_scenario_play' formatter.
@@ -33,7 +34,7 @@ class ScenarioPlayFormatter extends FormatterBase {
         'minus' => $item->display_settings['minus'],
         'keep' => ($item->display_settings['column'] == 'single' ? FALSE : $item->display_settings['keep']),
         'random_location' => $item->display_settings['random_location'],
-        'mark' => $config['mark'],
+        //'mark' => $config['mark'],
         'column' => $item->display_settings['column'],
         'font_size' => $item->display_settings['font_size'],
       ];
@@ -49,8 +50,13 @@ class ScenarioPlayFormatter extends FormatterBase {
           ],
         ],
       ];
+      foreach (['correct_emoticon', 'incorrect_emoticon', 'correct_audio', 'incorrect_audio'] as $file_key) {
+        if (!empty($this->getSetting($file_key))) {
+          $file = File::load($this->getSetting($file_key)[0]);
+          $elements[$delta]['#' . $file_key] = isset($file) ? $file->url() : '';
+        }
+      }
     }
-
     return $elements;
   }
 
@@ -61,6 +67,8 @@ class ScenarioPlayFormatter extends FormatterBase {
     return [
       'correct_audio' => NULL,
       'incorrect_audio' => NULL,
+      'correct_emoticon' => NULL,
+      'incorrect_emoticon' => NULL,
     ];
   }
 
@@ -69,7 +77,28 @@ class ScenarioPlayFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
-    $config = \Drupal::configFactory()->getEditable('ejikznayka.arithmetics');
+    $icon_array = array(
+      '#type' => 'managed_file',
+      '#multiple' => FALSE,
+      '#upload_location' => 'public://ejikznayka',
+      '#upload_validators' => array(
+        'file_validate_extensions' => array('png', 'gif', 'jpg', 'jpeg'),
+        'file_validate_is image' => array(),
+        'file_validate_image_resolution' => array('257x257', '16x16'),
+        'file_validate_size' => array(102400),
+      ),
+    );
+
+    $form['correct_emoticon'] = array(
+      '#title' => $this->t('Smiley for correct answer'),
+      '#default_value' => $this->getSetting('correct_emoticon'),
+    ) + $icon_array;
+
+    $form['incorrect_emoticon'] = array(
+      '#title' => $this->t('Smiley for incorrect answer'),
+      '#default_value' => $this->getSetting('incorrect_emoticon'),
+    ) + $icon_array;
+
     $audio_array = array(
       '#type' => 'managed_file',
       '#multiple' => FALSE,
@@ -88,7 +117,7 @@ class ScenarioPlayFormatter extends FormatterBase {
 
     $form['incorrect_audio'] = array(
       '#title' => $this->t('Audio for incorrect answer'),
-      '#default_value' => $config->get('incorrect_audio'),
+      '#default_value' => $this->getSetting('incorrect_audio'),
     ) + $audio_array;
 
     return $form;
