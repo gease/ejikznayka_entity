@@ -23,42 +23,105 @@ class ScenarioDefaultWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    /*$element['sequence'] = $element + [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Sequence'),
-        '#default_value' => isset($items[$delta]->sequence) ? $items[$delta]->sequence : NULL,
-      //'#placeholder' => $this->getSetting('placeholder'),
-      //'#size' => $this->getSetting('size'),
-      //'#maxlength' => Email::EMAIL_MAX_LENGTH,
-    ];
-    for ($i = 0; $i < 3; $i++) {
-      $element['sequence'][$i] = [
-        '#type' => 'number',
-        '#max' => 10,
-        '#min' => 1,
-        '#title' => $i,
-        '#default_value' => $items[$delta]->sequence[$i],
-      ];
-    }*/
-    $element['count'] = $element + [
+    $element['count'] = [
       '#type' => 'number',
-      '#title' => $this->t('Number of numbers'),
+      '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('count')->getLabel(),
       '#size' => 3,
       '#min' => 1,
-      '#max' => 50,
-      '#default_value' => is_array($items[$delta]->sequence) ? count($items[$delta]->sequence) : 1,
+      //'#max' => 50,
+      '#default_value' => $items[$delta]->count ?: 1,
       //  '#default_value' => $this->getSetting('count'),
       '#required' => TRUE,
+    ];
+    $element['range'] = [
+      '#type' => 'fieldgroup',
+      '#title' => $this->t('Range of numbers'),
+      'min' => [
+        '#type' => 'number',
+        '#title' => $this->t('From'),
+        '#min' => 0,
+        //'#max' => 999999,
+        '#default_value' => $items[$delta]->min ?: 1,
+      ],
+      'max' => [
+        '#type' => 'number',
+        '#title' => $this->t('To', array(), array('context' => 'Range')),
+        '#min' => 0,
+        //'#max' => 999999,
+        '#default_value' => $items[$delta]->max ?: 1,
+      ],
+    ];
+    $element['minus'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('minus')->getLabel(),
+      '#default_value' => $items[$delta]->minus,
+    ];
+    /** @var \Drupal\ejikznayka\TypedData\DisplaySettingsDataDefinition $display_definition */
+    $display_definition = $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('display_settings');
+    $element['display_settings'] = [
+      '#type' => 'fieldgroup',
+      '#title' => $display_definition->getLabel(),
+      'interval' => [
+        '#type' => 'number',
+        '#title' => $display_definition->getPropertyDefinition('interval')->getLabel(),
+        '#size' => 3,
+        '#step' => 0.1,
+        '#min' => 0.1,
+        '#max' => 5,
+        '#default_value' => $items[$delta]->get('display_settings')->get('interval')->getCastedValue(),
+        '#required' => TRUE,
+      ],
+      'font_size' => [
+        '#type' => 'number',
+        '#title' => $display_definition->getPropertyDefinition('font_size')->getLabel(),
+        '#step' => 4,
+        '#min' => 20,
+        '#max' => 100,
+        '#default_value' => $items[$delta]->get('display_settings')->get('font_size')->getCastedValue(),
+        '#required' => TRUE,
+      ],
+      'column' => [
+        '#type' => 'radios',
+        '#title' => $display_definition->getPropertyDefinition('column')->getLabel(),
+        '#options' => [
+          'single' => $this->t('By one'),
+          'column' => $this->t('In column'),
+          'line' => $this->t('In line'),
+        ],
+        '#default_value' => $items[$delta]->get('display_settings')->get('column')->getCastedValue(),
+        '#required' => TRUE,
+      ],
+      'keep' => [
+        '#type' => 'checkbox',
+        '#title' => $display_definition->getPropertyDefinition('keep')->getLabel(),
+        '#description' => $this->t("Doesn't have any effect if numbers are displayed by one"),
+        '#default_value' => $items[$delta]->get('display_settings')->get('keep')->getCastedValue(),
+      ],
+      'random_location' => [
+        '#type' => 'checkbox',
+        '#title' => $display_definition->getPropertyDefinition('random_location')->getLabel(),
+        '#description' => $this->t("Doesn't have any effect if numbers are displayed in column"),
+        '#default_value' => $items[$delta]->get('display_settings')->get('random_location')->getCastedValue(),
+      ],
     ];
     return $element;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    $return_values = [];
     foreach ($values as $delta => $item_values) {
       $sequence = $positions = [];
+      $sum = 0;
       for ($i = 0; $i < $item_values['count']; $i++) {
-        $sequence[$i] = mt_rand(1, 100);
+        if ($item_values['minus'] && $sum > $item_values['range']['min'] && mt_rand(1, 2) == 1) {
+          $sequence[$i] = -mt_rand($item_values['range']['min'], min($sum, $item_values['range']['max']));
+        }
+        else {
+          $sequence[$i] = mt_rand($item_values['range']['min'], $item_values['range']['max']);
+        }
+        $sum += $sequence[$i];
         // Generate random position.
         $position = [];
         $top = mt_rand(0, 50);
@@ -80,7 +143,10 @@ class ScenarioDefaultWidget extends WidgetBase {
 
       $return_values[$delta]['sequence'] = $sequence;
       $return_values[$delta]['positions'] = $positions;
+      $return_values[$delta]['minus'] = (bool) $item_values['minus'];
+      $return_values[$delta] += $item_values['range'];
       $return_values[$delta]['count'] = $item_values['count'];
+      $return_values[$delta]['display_settings'] = $item_values['display_settings'];
     }
     return $return_values;
   }
