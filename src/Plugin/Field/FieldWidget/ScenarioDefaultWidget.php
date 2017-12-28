@@ -127,16 +127,20 @@ class ScenarioDefaultWidget extends WidgetBase {
         $top = mt_rand(0, 50);
         $left = mt_rand(0, 50);
         if (mt_rand(1, 2) == 1) {
-          $position['top'] = $top;
+          $position['top'] = $top . '%';
+          $position['bottom'] = '';
         }
         else {
-          $position['bottom'] = $top;
+          $position['bottom'] = $top . '%';
+          $position['top'] = '';
         }
         if (mt_rand(1, 2) == 1) {
-          $position['left'] = $left;
+          $position['left'] = $left . '%';
+          $position['right'] = '';
         }
         else {
-          $position['right'] = $left;
+          $position['right'] = $left . '%';
+          $position['left'] = '';
         }
         $positions[] = $position;
       }

@@ -19,9 +19,10 @@ class PositionDataDefinition extends MapDataDefinition {
   public function getPropertyDefinitions() {
     if (!isset($this->propertyDefinitions)) {
       foreach (['left', 'right', 'top', 'bottom'] as $property) {
-        $this->propertyDefinitions[$property] = DataDefinition::create('integer')
+        $this->propertyDefinitions[$property] = DataDefinition::create('string')
           ->setLabel($property)
-          ->addConstraint('Range', ['min' => 0, 'max' => 100]);
+          ->setRequired(TRUE);
+          //->addConstraint('Range', ['min' => 0, 'max' => 100]);
       }
     }
     return $this->propertyDefinitions;
