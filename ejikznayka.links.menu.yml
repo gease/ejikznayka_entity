@@ -1,0 +1,12 @@
+# Define the menu links for this module
+
+entity.ejikznayka_lesson.collection:
+  title: 'Ejikznayka Lessons Listing'
+  route_name: entity.ejikznayka_lesson.collection
+  description: 'List Lessons'
+  weight: 10
+ejikznayka_lesson.admin.structure.settings:
+  title: Lesson Settings
+  description: 'Configure Lesson entity'
+  route_name:  ejikznayka.lesson_settings
+  parent: system.admin_structure

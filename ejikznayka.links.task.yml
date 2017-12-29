@@ -1,0 +1,22 @@
+# Define the 'local' links for the module
+
+lesson.settings_tab:
+  route_name: ejikznayka.lesson_settings
+  title: Settings
+  base_route: ejikznayka.lesson_settings
+
+lesson.view:
+  route_name: entity.ejikznayka_lesson.canonical
+  base_route: entity.ejikznayka_lesson.canonical
+  title: View
+
+lesson.page_edit:
+  route_name: entity.ejikznayka_lesson.edit_form
+  base_route: entity.ejikznayka_lesson.canonical
+  title: Edit
+
+lesson.delete_confirm:
+  route_name:  entity.ejikznayka_lesson.delete_form
+  base_route:  entity.ejikznayka_lesson.canonical
+  title: Delete
+  weight: 10
