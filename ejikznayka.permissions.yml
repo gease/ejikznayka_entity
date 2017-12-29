@@ -1,0 +1,11 @@
+view lesson entity:
+  title: 'View Lesson'
+add lesson entity:
+  title: 'Add Lesson'
+edit lesson entity:
+  title: 'Edit Lesson'
+delete lesson entity:
+  title: 'Delete Lesson'
+administer lesson entity:
+  title: 'Administer Lesson'
+  restrict access: TRUE
