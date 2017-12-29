@@ -41,7 +41,7 @@ class LessonListBuilder extends EntityListBuilder {
    * and inserts the 'edit' and 'delete' links as defined for the entity type.
    */
   public function buildHeader() {
-    $header['id'] = $this->t('ContactID');
+    $header['id'] = $this->t('LeesonID');
     $header['name'] = $this->t('Title');
     return $header + parent::buildHeader();
   }

@@ -24,7 +24,7 @@ ejikznayka.lesson_add:
   path: '/ejikznayka_lesson/add'
   defaults:
   # Calls the form.add controller, defined in the lesson entity.
-    _entity_form: ejikznaka_lesson.add
+    _entity_form: ejikznayka_lesson.add
     _title: 'Add Lesson'
   requirements:
     _entity_create_access: 'ejikznayka_lesson'

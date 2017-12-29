@@ -80,7 +80,7 @@ use Drupal\user\UserInterface;
  *       "edit" = "Drupal\ejikznayka\Form\LessonForm",
  *       "delete" = "Drupal\ejikznayka\Form\LessonDeleteForm",
  *     },
- *     "access" = "Drupal\ejikznayka\LessonAccessControlHandler",
+ *     "access" = "Drupal\ejikznayka\Entity\LessonAccessControlHandler",
  *   },
  *   base_table = "ejikznayka_lesson",
  *   admin_permission = "administer lesson entity",
