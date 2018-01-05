@@ -15,9 +15,9 @@ use Drupal\file\Entity\File;
  * @see ejikznayka_entity_view_display_edit_submit().
  */
 function ejikznayka_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  foreach ($form_state->getBuildInfo()['callback_object']->getEntity()->get('content') as $field) {
-    if ($field['type'] == 'ejikznayka_scenario_play') {
-      // We put our callabck first.
+  foreach ($form_state->getBuildInfo()['callback_object']->getEntity()->get('fieldDefinitions') as $field_definition) {
+    if ($field_definition->getType() == 'ejikznayka_scenario') {
+      // We put our callback first.
       // If we put it last, entity would be saved already.
       array_unshift($form['actions']['submit']['#submit'], 'ejikznayka_entity_view_display_edit_submit');
       return;
@@ -29,8 +29,8 @@ function ejikznayka_form_entity_view_display_edit_form_alter(&$form, FormStateIn
  * Callback for submitting entity view edit form.
  * We need to set files permanent.
  * No way to do this in any field classes, because entity handles form save.
- * @TODO control file usage.
- * @TODO File::LoadMultiple().
+ * @TODO At this moment, we don't care about re-use of files.
+ * @TODO File::loadMultiple().
  */
 function ejikznayka_entity_view_display_edit_submit(array &$form, FormStateInterface $form_state) {
   /** @var \Drupal\Core\Entity\Entity\EntityViewDisplay $entity */
@@ -39,6 +39,8 @@ function ejikznayka_entity_view_display_edit_submit(array &$form, FormStateInter
     ->getStorage($entity->getEntityTypeId())
     ->load($entity->getOriginalId())
     ->get('content');
+
+  $file_usage = \Drupal::service('file.usage');
 
   foreach ($form_state->getBuildInfo()['callback_object']->getEntity()->get('content') as $field_name => $field) {
     if ($field['type'] == 'ejikznayka_scenario_play'
@@ -50,18 +52,19 @@ function ejikznayka_entity_view_display_edit_submit(array &$form, FormStateInter
           foreach ($setting as $fid) {
             $file = File::load($fid);
             $file->setPermanent();
+            $file_usage->add($file, 'ejikznayka', $entity->getEntityTypeId(), $entity->getOriginalId());
             $file->save();
           }
         }
       }
       // Case 2. Widget changed from 'ejikznayka_scenario_play'.
       elseif ($field['type'] != 'ejikznayka_scenario_play') {
-        // Set all files temporary.
+        // Delete all files.
         foreach ($content_original[$field_name]['settings'] as $setting) {
           foreach ($setting as $fid) {
             $file = File::load($fid);
-            $file->setTemporary();
-            $file->save();
+            // We call ::delete() directly because it takes care of usage.
+            $file->delete();
           }
         }
       }
@@ -76,6 +79,7 @@ function ejikznayka_entity_view_display_edit_submit(array &$form, FormStateInter
           foreach ($diff as $fid) {
             $file = File::load($fid);
             $file->setPermanent();
+            $file_usage->add($file, 'ejikznayka', $entity->getEntityTypeId(), $entity->getOriginalId());
             $file->save();
           }
           // Then find removed files.
@@ -83,8 +87,7 @@ function ejikznayka_entity_view_display_edit_submit(array &$form, FormStateInter
           // And fix them.
           foreach ($diff as $fid) {
             $file = File::load($fid);
-            $file->setTemporary();
-            $file->save();
+            $file->delete();
           }
         }
       }
