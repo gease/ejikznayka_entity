@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ *
+ * Contains hooks implementations.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * @see ejikznayka_entity_view_display_edit_submit().
+ */
+function ejikznayka_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  foreach ($form_state->getBuildInfo()['callback_object']->getEntity()->get('content') as $field) {
+    if ($field['type'] == 'ejikznayka_scenario_play') {
+      // We put our callabck first.
+      // If we put it last, entity would be saved already.
+      array_unshift($form['actions']['submit']['#submit'], 'ejikznayka_entity_view_display_edit_submit');
+      return;
+    }
+  }
+}
+
+/**
+ * Callback for submitting entity view edit form.
+ * We need to set files permanent.
+ * No way to do this in any field classes, because entity handles form save.
+ * @TODO control file usage.
+ * @TODO File::LoadMultiple().
+ */
+function ejikznayka_entity_view_display_edit_submit(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\Entity\Entity\EntityViewDisplay $entity */
+  $entity = $form_state->getBuildInfo()['callback_object']->getEntity();
+  $content_original = \Drupal::entityTypeManager()
+    ->getStorage($entity->getEntityTypeId())
+    ->load($entity->getOriginalId())
+    ->get('content');
+
+  foreach ($form_state->getBuildInfo()['callback_object']->getEntity()->get('content') as $field_name => $field) {
+    if ($field['type'] == 'ejikznayka_scenario_play'
+      || $content_original[$field_name]['type'] == 'ejikznayka_scenario_play') {
+      // Case 1. Widget changed to 'ejikznayka_scenario_play'.
+      if ($content_original[$field_name]['type'] != 'ejikznayka_scenario_play') {
+        // Set all files permanent.
+        foreach ($field['settings'] as $setting) {
+          foreach ($setting as $fid) {
+            $file = File::load($fid);
+            $file->setPermanent();
+            $file->save();
+          }
+        }
+      }
+      // Case 2. Widget changed from 'ejikznayka_scenario_play'.
+      elseif ($field['type'] != 'ejikznayka_scenario_play') {
+        // Set all files temporary.
+        foreach ($content_original[$field_name]['settings'] as $setting) {
+          foreach ($setting as $fid) {
+            $file = File::load($fid);
+            $file->setTemporary();
+            $file->save();
+          }
+        }
+      }
+      // Case 3. Widget was and is 'ejikznayka_scenario_play',
+      // settings have changed.
+      else {
+        $settings_original = $content_original[$field_name]['settings'];
+        foreach ($field['settings'] as $key => $setting) {
+          // We find added files.
+          $diff = array_diff($setting, $settings_original[$key]);
+          // And fix them.
+          foreach ($diff as $fid) {
+            $file = File::load($fid);
+            $file->setPermanent();
+            $file->save();
+          }
+          // Then find removed files.
+          $diff = array_diff($settings_original[$key], $setting);
+          // And fix them.
+          foreach ($diff as $fid) {
+            $file = File::load($fid);
+            $file->setTemporary();
+            $file->save();
+          }
+        }
+      }
+    }
+  }
+}

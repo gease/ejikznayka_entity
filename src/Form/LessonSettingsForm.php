@@ -46,7 +46,7 @@ class LessonSettingsForm extends FormBase {
    *   An associative array containing the current state of the form.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['lesson_settings']['#markup'] = 'Settings form for Lesson. Manage field settings here.';
+    $form['lesson_settings']['#markup'] = $this->t('Settings form for Lesson. Manage field settings here.');
     return $form;
   }
 }
