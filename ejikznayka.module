@@ -94,3 +94,20 @@ function ejikznayka_entity_view_display_edit_submit(array &$form, FormStateInter
     }
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function ejikznayka_theme($existing, $type, $theme, $path) {
+  return [
+    'ejikznayka_play_formatter' => [
+      'template' => 'ejikznayka_play_formatter',
+      'variables' => [
+        'correct_emoticon' => NULL,
+        'incorrect_emoticon' => NULL,
+        'correct_audio' => NULL,
+        'incorrect_audio' => NULL,
+      ],
+    ],
+  ];
+}

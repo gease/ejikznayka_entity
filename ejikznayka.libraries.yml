@@ -1,0 +1,13 @@
+ejikznayka:
+  version: 1.x
+  js:
+    js/ejikznayka.js: {}
+    js/ejikznayka_play_formatter.js: {}
+  css:
+    component:
+      css/ejikznayka.css: {}
+
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+    - core/jquery.once

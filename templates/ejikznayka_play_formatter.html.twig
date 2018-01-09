@@ -1,0 +1,64 @@
+{#
+/**
+ * @file
+ * Default theme implementation for mental arithmetics page.
+ *
+ * Available variables:
+ * - incorrect_emoticon: url for image file supplied by the administrator for displaying with incorrect answer.
+ * - correct_emoticon: url for image file supplied by the user for displaying with incorrect answer.
+ * - incorrect_audio: url for audio file supplied by the administrator for playing with incorrect answer.
+ * - correct_audio: url for audio file supplied by the administrator for playing with incorrect answer.
+ * @ingroup themeable
+ */
+#}
+
+{{ attach_library('ejikznayka/ejikznayka') }}
+<button class="ejikznayka_page">{{ 'Go to the exercise page'|t }}</button>
+<div class="overlay">
+  <div class="ejikznayka_close"></div>
+  <div class="ejikznayka_controls">
+    <input type="button" name="start" class="start" value="{{ 'Start'|t }}"/>
+    <input type="text" name="input_answer" class="input_answer" placeholder="{{ 'Your answer'|t }}"/>
+    <input type="button" name="check_answer" class="check_answer" value="{{ 'Check the answer'|t }}"/>
+    <input type="button" name="show_answer" class="show_answer" value="{{ 'Show answer'|t }}"/>
+  </div>
+  <div class="ejikznayka_display">
+    <div class="mark">
+      {{ "Mark for the response"|t }}
+      <span class="mark_placeholder"></span>
+    </div>
+    <div class="show"></div>
+    <div class="your_answer">
+      {{ "Your answer"|t }}:
+      <div class="your_answer_placeholder"></div>
+    </div>
+    <div class="correct_answer">
+      {{ "Correct answer"|t }}:
+      <div class="correct_answer_placeholder"></div>
+    </div>
+    <div class="check_answer_message">
+      <div class="incorrect">
+        {% if incorrect_emoticon %}
+          <img src="{{ incorrect_emoticon }}"/>
+        {% else %}
+          {{ "Incorrect!"|t }}
+        {% endif %}
+        {%  if incorrect_audio %}
+          <audio src="{{ incorrect_audio }}"></audio>
+        {%  endif %}
+      </div>
+      <div class="correct">
+        {% if correct_emoticon %}
+          <img src="{{ correct_emoticon }}"/>
+        {% else %}
+          {{ "Correct!"|t }}
+        {% endif %}
+        {% if correct_audio %}
+          <audio src="{{ correct_audio }}"></audio>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="ejikznayka_empty"></div>
+
+</div>

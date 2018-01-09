@@ -6,6 +6,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
+use Drupal\Component\Utility\Html;
 
 /**
  * Plugin implementation of the 'ejikznayka_scenario_play' formatter.
@@ -25,7 +26,6 @@ class ScenarioPlayFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-
     /** @var \Drupal\Core\TypedData\Plugin\DataType\ItemList $items */
     foreach ($items as $delta => $item) {
       $js_config = [
@@ -34,18 +34,22 @@ class ScenarioPlayFormatter extends FormatterBase {
         'minus' => $item->display_settings['minus'],
         'keep' => ($item->display_settings['column'] == 'single' ? FALSE : $item->display_settings['keep']),
         'random_location' => $item->display_settings['random_location'],
-        //'mark' => $config['mark'],
+//        'mark' => $config['mark'],
         'column' => $item->display_settings['column'],
         'font_size' => $item->display_settings['font_size'],
       ];
-      $js_config['data']['sequence'] = $item->sequence;
-      $js_config['data']['positions'] = $item->positions;
       $elements[$delta] = [
-        '#theme' => 'ejikznayka_arithmetics',
+        '#theme' => 'ejikznayka_play_formatter',
         '#attached' => [
           'drupalSettings' => [
             'ejikznayka' => [
-              'arithmetics' => $js_config,
+              'field--name-' . Html::getClass($items->getName()) => [
+                $delta => [
+                  'options' => $js_config,
+                  'sequence' => $item->sequence,
+                  'positions' => $item->positions,
+                ],
+              ],
             ],
           ],
         ],
