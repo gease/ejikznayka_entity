@@ -1,7 +1,7 @@
 # Route name can be used in several places; e.g. links, redirects, and local
 # actions.
 entity.ejikznayka_lesson.canonical:
-  path: '/ejikznayka/{ejikznayka_lesson}'
+  path: '/ejikznayka_lesson/{ejikznayka_lesson}'
   defaults:
   # Calls the view controller, defined in the annotation of the lesson entity
     _entity_view: 'ejikznayka_lesson'
@@ -20,12 +20,11 @@ entity.ejikznayka_lesson.collection:
   # Checks for permission directly.
     _permission: 'administer lesson entity'
 
-ejikznayka.lesson_add:
-  path: '/ejikznayka_lesson/add'
+entity.ejikznayka_lesson.add_form:
+  path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/add'
   defaults:
-  # Calls the form.add controller, defined in the lesson entity.
-    _entity_form: ejikznayka_lesson.add
-    _title: 'Add Lesson'
+    _controller: '\Drupal\ejikznayka\Controller\EjikznaykaController::addForm'
+    _title: 'Add lesson'
   requirements:
     _entity_create_access: 'ejikznayka_lesson'
 
@@ -54,3 +53,43 @@ ejikznayka.lesson_settings:
     _title: 'Lesson Settings'
   requirements:
     _permission: 'administer lesson entity'
+
+entity.ejikznayka_lesson_type.delete_form:
+  path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/delete'
+  defaults:
+    _entity_form: 'ejikznayka_lesson_type.delete'
+    _title: 'Delete lesson type'
+  requirements:
+    _entity_access: 'ejikznayka_lesson_type.delete'
+
+entity.ejikznayka_lesson_type.edit_form:
+  path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}'
+  defaults:
+    _entity_form: 'ejikznayka_lesson_type.default'
+    _title: 'Edit lesson type'
+  requirements:
+    _entity_access: 'ejikznayka_lesson_type.update'
+
+entity.ejikznayka_lesson_type.overview_form:
+  path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/overview'
+  defaults:
+    _form: 'Drupal\ejikznayka\Form\OverviewLessons'
+    _title: 'Lessons list'
+  requirements:
+    _entity_access: 'ejikznayka_lesson_type.view'
+
+entity.ejikznayka_lesson_type.add_form:
+  path: '/admin/structure/ejikznayka/add'
+  defaults:
+    _entity_form: 'ejikznayka_lesson_type.default'
+    _title: 'Add lesson type'
+  requirements:
+    _entity_create_access: 'ejikznayka_lesson_type'
+
+entity.ejikznayka_lesson_type.collection:
+  path: '/admin/structure/ejikznayka'
+  defaults:
+    _entity_list: 'ejikznayka_lesson_type'
+    _title: 'Lesson type'
+  requirements:
+    _permission: 'administer ejikznayka'

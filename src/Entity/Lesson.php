@@ -71,12 +71,13 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "ejikznayka_lesson",
  *   label = @Translation("Lesson"),
+ *   bundle_label = @Translation("Lesson type"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\ejikznayka\Entity\Controller\LessonListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
- *       "add" = "Drupal\ejikznayka\Form\LessonForm",
+ *       "default" = "Drupal\ejikznayka\Form\LessonForm",
  *       "edit" = "Drupal\ejikznayka\Form\LessonForm",
  *       "delete" = "Drupal\ejikznayka\Form\LessonDeleteForm",
  *     },
@@ -86,17 +87,20 @@ use Drupal\user\UserInterface;
  *   admin_permission = "administer lesson entity",
  *   fieldable = TRUE,
  *   entity_keys = {
- *     "id" = "id",
+ *     "id" = "ejid",
+ *     "bundle" = "ejtid",
  *     "label" = "name",
  *     "uuid" = "uuid"
  *   },
+ *   bundle_entity_type = "ejikznayka_lesson_type",
+ *   field_ui_base_route = "entity.ejikznayka_lesson_type.overview_form",
+ *   common_reference_target = TRUE,
  *   links = {
  *     "canonical" = "/ejikznayka_lesson/{ejikznayka_lesson}",
  *     "edit-form" = "/ejikznayka_lesson/{ejikznayka_lesson}/edit",
  *     "delete-form" = "/ejikznayka_lesson/{ejikznayka_lesson}/delete",
  *     "collection" = "/ejikznayka_lesson/list"
  *   },
- *   field_ui_base_route = "ejikznayka.lesson_settings",
  * )
  *
  * The 'links' above are defined by their path. For core to find the corresponding
@@ -135,40 +139,6 @@ class Lesson extends ContentEntityBase implements LessonInterface {
     $values += array(
       'user_id' => \Drupal::currentUser()->id(),
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCreatedTime() {
-    return $this->get('created')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getChangedTime() {
-    return $this->get('changed')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setChangedTime($timestamp) {
-    $this->set('changed', $timestamp);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getChangedTimeAcrossTranslations()  {
-    $changed = $this->getUntranslated()->getChangedTime();
-    foreach ($this->getTranslationLanguages(FALSE) as $language)    {
-      $translation_changed = $this->getTranslation($language->getId())->getChangedTime();
-      $changed = max($translation_changed, $changed);
-    }
-    return $changed;
   }
 
   /**
@@ -213,22 +183,23 @@ class Lesson extends ContentEntityBase implements LessonInterface {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
 
-    // Standard field, used as unique if primary index.
-    $fields['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('ID'))
-      ->setDescription(t('The ID of the Lesson entity.'))
-      ->setReadOnly(TRUE);
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
+    $fields = parent::baseFieldDefinitions($entity_type);
 
-    // Standard field, unique outside of the scope of the current project.
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The UUID of the Lesson entity.'))
-      ->setReadOnly(TRUE);
+    // Primary index.
+    $fields['ejid']->setLabel(t('Lesson id'))
+      ->setDescription(t('The lesson id.'));
+
+    // Bundle.
+    $fields['ejtid']->setLabel(t('Lesson type'))
+      ->setDescription(t('The lesson type.'));
+
+    $fields['uuid']->setLabel(t('UUID'))
+      ->setDescription(t('The UUID of the Lesson entity.'));
 
     // Name field for the contact.
     // We set display options for the view as well as the form.
     // Users with correct privileges can change the view and edit configuration.
-
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Lesson entity.'))
