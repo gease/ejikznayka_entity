@@ -40,7 +40,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 30px;
 }
 .ejikznayka_display > div {
   display: none;
@@ -59,7 +58,6 @@ input[type='number'] {
 }
 .show {
   color: black;
-  font-size: 40px;
   transition: color  0.5s, opacity 0.1s;
   text-align: right;
 }
@@ -71,7 +69,6 @@ input[type='number'] {
 }
 .your_answer_placeholder, .correct_answer_placeholder {
   text-align: center;
-  font-size: 40px;
 }
 .correct_answer {
   color: green;

@@ -46,7 +46,6 @@
     }
     this.result = result;
     const decoratedSequence = this.decoratedSequence = decorateAll(this.sequence);
-    // Finish setup.
     // Region variables.
     const $block = $(this).next('.overlay');
     const $controls = $block.children('.ejikznayka_controls');
@@ -54,7 +53,11 @@
     const $show = $display.children('.show');
     const $correct_answer = $display.children('.correct_answer');
     const $correct_answer_placeholder = $correct_answer.children('.correct_answer_placeholder');
+    $display.css('font-size', options.font_size + 'px');
+    $display.children('.mark').css('font-size', (3 * options.font_size / 4) + 'px');
+
     // End region variables.
+    // Finish setup.
     const showResult = function () {
       $display.css('display', 'flex');
       $controls.children('.start').css('display', 'block');
