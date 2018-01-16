@@ -1,3 +1,6 @@
+administer ejikznayka:
+  title: 'Administer Ejik Znayka'
+  restrict access: TRUE
 view lesson entity:
   title: 'View Lesson'
 add lesson entity:

@@ -8,6 +8,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -109,5 +110,34 @@ function ejikznayka_theme($existing, $type, $theme, $path) {
         'incorrect_audio' => NULL,
       ],
     ],
+    'ejikznayka_lesson_add_list' => [
+      'variables' => ['content' => NULL],
+    ],
   ];
+}
+
+/**
+ * Prepares variables for list of available lesson type templates.
+ *
+ * Default template: ejikznayka-lesson-add-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content: An array of lesson types.
+ *
+ */
+function template_preprocess_ejikznayka_lesson_add_list(&$variables) {
+  $variables['types'] = [];
+  if (!empty($variables['content'])) {
+    /** @var \Drupal\ejikznayka\Entity\LessonType $type */
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->id()] = [
+        'type' => $type->id(),
+        'add_link' => \Drupal::l($type->label(), new Url('entity.ejikznayka_lesson.add_form', ['ejikznayka_lesson_type' => $type->id()])),
+        'description' => [
+          '#markup' => $type->getDescription(),
+        ],
+      ];
+    }
+  }
 }

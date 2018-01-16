@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Default theme implementation to list lesson types available for adding content.
+ *
+ * This list is displayed on the Add lesson admin page.
+ *
+ * Available variables:
+ * - types: A list of lesson types, each with the following properties:
+ *   - add_link: Link to create a lesson of this type.
+ *   - description: Description of this lesson type.
+ *
+ * @see template_preprocess_ejikznayka_lesson_add_list()
+ * @see node-add-list.html.twig
+ *
+ * @ingroup themeable
+ */
+#}
+{% if types is not empty %}
+  <dl>
+    {% for type in types %}
+      <dt>{{ type.add_link }}</dt>
+      <dd>{{ type.description }}</dd>
+    {% endfor %}
+  </dl>
+{% else %}
+  <p>
+    {% set create_lesson_type = path('entity.ejikznayka_lesson_type.add_form') %}
+    {% trans %}
+      You have not created any lesson types yet. Go to the <a href="{{ create_lesson_type }}">lesson type creation page</a> to add a new lesson type.
+    {% endtrans %}
+  </p>
+{% endif %}
