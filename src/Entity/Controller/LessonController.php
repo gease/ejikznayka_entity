@@ -31,7 +31,7 @@ class LessonController extends ControllerBase {
    * Redirects to ejikznayka_lesson/add/[type] if only one content type is available.
    *
    * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
-   *   A render array for a list of the node types that can be added; however,
+   *   A render array for a list of the lesson types that can be added; however,
    *   if there is only one lesson type defined for the site, the function
    *   will return a RedirectResponse to the lesson add page for that one lesson
    *   type.
@@ -45,12 +45,11 @@ class LessonController extends ControllerBase {
 
     $content = [];
 
-    // Only use node types the user has access to.
     foreach ($this->entityManager()->getStorage('ejikznayka_lesson_type')->loadMultiple() as $type) {
       $content[$type->id()] = $type;
     }
 
-    // Bypass the node/add listing if only one content type is available.
+    // Bypass the lesson/add listing if only one lesson type is available.
     if (count($content) == 1) {
       $type = array_shift($content);
       return $this->redirect('entity.ejikznayka_lesson.add_form', ['ejikznayka_lesson_type' => $type->id()]);
