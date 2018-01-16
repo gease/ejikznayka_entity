@@ -33,8 +33,8 @@ class LessonTypeForm extends BundleEntityFormBase {
       '#default_value' => $lesson_type->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => [
-        'exists' => FALSE, //[$this, 'exists'],
-        //'source' => ['name'],
+        'exists' => ['Drupal\ejikznayka\Entity\LessonType', 'load'],
+        'source' => ['name'],
       ],
     ];
     $form['description'] = [
