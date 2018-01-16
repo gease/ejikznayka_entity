@@ -86,6 +86,7 @@ use Drupal\user\UserInterface;
  *   base_table = "ejikznayka_lesson",
  *   admin_permission = "administer lesson entity",
  *   fieldable = TRUE,
+ *   translatable = FALSE,
  *   entity_keys = {
  *     "id" = "ejid",
  *     "bundle" = "ejtid",
@@ -93,7 +94,8 @@ use Drupal\user\UserInterface;
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "ejikznayka_lesson_type",
- *   field_ui_base_route = "entity.ejikznayka_lesson_type.overview_form",
+ *   field_ui_base_route = "entity.ejikznayka_lesson_type.edit_form",
+ *   permission_granularity = "entity_type",
  *   common_reference_target = TRUE,
  *   links = {
  *     "canonical" = "/ejikznayka_lesson/{ejikznayka_lesson}",

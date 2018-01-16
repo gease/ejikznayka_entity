@@ -21,6 +21,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *   admin_permission = "administer ejikznayka",
  *   config_prefix = "lesson",
  *   bundle_of = "ejikznayka_lesson",
+ *   translatable = FALSE,
  *   entity_keys = {
  *     "id" = "ejtid",
  *     "label" = "name",
@@ -28,7 +29,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *   links = {
  *     "delete-form" = "/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/delete",
  *     "edit-form" = "/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}",
- *     "overview-form" = "/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/overview",
  *     "collection" = "/admin/structure/ejikznayka",
  *   },
  *   config_export = {

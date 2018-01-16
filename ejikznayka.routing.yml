@@ -11,7 +11,7 @@ entity.ejikznayka_lesson.canonical:
     _entity_access: 'ejikznayka_lesson.view'
 
 entity.ejikznayka_lesson.collection:
-  path: '/ejikznayka_lesson/list'
+  path: 'admin/ejikznayka_lesson/list'
   defaults:
   # Calls the list controller, defined in the annotation of the lesson entity.
     _entity_list: 'ejikznayka_lesson'
@@ -21,15 +21,15 @@ entity.ejikznayka_lesson.collection:
     _permission: 'administer lesson entity'
 
 entity.ejikznayka_lesson.add_form:
-  path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/add'
+  path: '/admin/ejikznayka_lesson/add/{ejikznayka_lesson_type}'
   defaults:
-    _controller: '\Drupal\ejikznayka\Controller\EjikznaykaController::addForm'
+    _controller: '\Drupal\ejikznayka\Entity\Controller\LessonController::addForm'
     _title: 'Add lesson'
   requirements:
     _entity_create_access: 'ejikznayka_lesson'
 
 entity.ejikznayka_lesson.edit_form:
-  path: '/ejikznayka/{ejikznayka_lesson}/edit'
+  path: '/ejikznayka_lesson/{ejikznayka_lesson}/edit'
   defaults:
   # Calls the form.edit controller, defined in the lesson entity.
     _entity_form: ejikznayka_lesson.edit
@@ -38,7 +38,7 @@ entity.ejikznayka_lesson.edit_form:
     _entity_access: 'ejikznayka_lesson.edit'
 
 entity.ejikznayka_lesson.delete_form:
-  path: '/ejikznayka/{ejikznayka_lesson}/delete'
+  path: '/ejikznayka_lesson/{ejikznayka_lesson}/delete'
   defaults:
     # Calls the form.delete controller, defined in the lesson entity.
     _entity_form: ejikznayka_lesson.delete
@@ -46,21 +46,13 @@ entity.ejikznayka_lesson.delete_form:
   requirements:
     _entity_access: 'ejikznayka_lesson.delete'
 
-ejikznayka.lesson_settings:
-  path: 'admin/structure/ejikznayka_lesson_settings'
-  defaults:
-    _form: '\Drupal\ejikznayka\Form\LessonSettingsForm'
-    _title: 'Lesson Settings'
-  requirements:
-    _permission: 'administer lesson entity'
-
 entity.ejikznayka_lesson_type.delete_form:
   path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/delete'
   defaults:
     _entity_form: 'ejikznayka_lesson_type.delete'
     _title: 'Delete lesson type'
   requirements:
-    _entity_access: 'ejikznayka_lesson_type.delete'
+    _permission: 'administer ejikznayka'
 
 entity.ejikznayka_lesson_type.edit_form:
   path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}'
@@ -68,15 +60,7 @@ entity.ejikznayka_lesson_type.edit_form:
     _entity_form: 'ejikznayka_lesson_type.default'
     _title: 'Edit lesson type'
   requirements:
-    _entity_access: 'ejikznayka_lesson_type.update'
-
-entity.ejikznayka_lesson_type.overview_form:
-  path: '/admin/structure/ejikznayka/manage/{ejikznayka_lesson_type}/overview'
-  defaults:
-    _form: 'Drupal\ejikznayka\Form\OverviewLessons'
-    _title: 'Lessons list'
-  requirements:
-    _entity_access: 'ejikznayka_lesson_type.view'
+    _permission: 'administer ejikznayka'
 
 entity.ejikznayka_lesson_type.add_form:
   path: '/admin/structure/ejikznayka/add'
@@ -84,7 +68,7 @@ entity.ejikznayka_lesson_type.add_form:
     _entity_form: 'ejikznayka_lesson_type.default'
     _title: 'Add lesson type'
   requirements:
-    _entity_create_access: 'ejikznayka_lesson_type'
+    _permission: 'administer ejikznayka'
 
 entity.ejikznayka_lesson_type.collection:
   path: '/admin/structure/ejikznayka'

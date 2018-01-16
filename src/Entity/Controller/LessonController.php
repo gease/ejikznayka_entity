@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ejikznayka\Controller;
+namespace Drupal\ejikznayka\Entity\Controller;
 
 
 use Drupal\Core\Controller\ControllerBase;
@@ -9,7 +9,7 @@ use Drupal\ejikznayka\Entity\LessonType;
 /**
  * Provides route responses for Lesson entity.
  */
-class EjikznaykaController extends ControllerBase {
+class LessonController extends ControllerBase {
 
   /**
    * Returns a form to add a new lesson.

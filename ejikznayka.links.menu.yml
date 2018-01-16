@@ -1,12 +1,13 @@
 # Define the menu links for this module
+entity.ejikznayka_lesson_type.collection:
+  title: 'Lesson types'
+  parent: system.admin_structure
+  description: 'Create and manage fields, forms, and display settings for lesson types.'
+  route_name: entity.ejikznayka_lesson_type.collection
 
 entity.ejikznayka_lesson.collection:
   title: 'Ejikznayka Lessons Listing'
   route_name: entity.ejikznayka_lesson.collection
+  parent: system.admin
   description: 'List Lessons'
   weight: 10
-ejikznayka_lesson.admin.structure.settings:
-  title: Lesson Settings
-  description: 'Configure Lesson entity'
-  route_name:  ejikznayka.lesson_settings
-  parent: system.admin_structure

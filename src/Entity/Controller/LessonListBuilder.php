@@ -22,10 +22,7 @@ class LessonListBuilder extends EntityListBuilder {
    */
   public function render() {
     $build['description'] = [
-      '#markup' => $this->t('Ejik Znayka implements a Lesson model. These contacts are fieldable entities. You can manage the fields on the <a href="@adminlink">Lessons admin page</a>.', array(
-        '@adminlink' => \Drupal::urlGenerator()
-          ->generateFromRoute('ejikznayka.lesson_settings'),
-      )),
+      '#markup' => $this->t('List of lessons.'),
     ];
 
     $build += parent::render();
@@ -41,7 +38,7 @@ class LessonListBuilder extends EntityListBuilder {
    * and inserts the 'edit' and 'delete' links as defined for the entity type.
    */
   public function buildHeader() {
-    $header['id'] = $this->t('LeesonID');
+    $header['id'] = $this->t('LessonID');
     $header['name'] = $this->t('Title');
     return $header + parent::buildHeader();
   }
