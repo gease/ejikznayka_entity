@@ -1,0 +1,11 @@
+entity.ejikznayka_lesson_type.add:
+  route_name: entity.ejikznayka_lesson_type.add_form
+  title: 'Add lesson type'
+  appears_on:
+    - entity.ejikznayka_lesson_type.collection
+
+entity.ejikznayka_lesson.add_page:
+  route_name: entity.ejikznayka_lesson.add_page
+  title: 'Add lesson'
+  appears_on:
+   - entity.ejikznayka_lesson.collection

@@ -47,17 +47,11 @@ class LessonTypeForm extends BundleEntityFormBase {
   }
 
   /**
-   * Determines if the lesson type already exists.
-   *
-   * @param string $id
-   *   The lesson type ID.
-   *
-   * @return bool
-   *   TRUE if the vocabulary exists, FALSE otherwise.
+   * {@inheritdoc}
    */
-  public function exists($id) {
-//    $action = $this->vocabularyStorage->load($id);
-//    return !empty($action);
-    return FALSE;
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+    $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
   }
+
 }

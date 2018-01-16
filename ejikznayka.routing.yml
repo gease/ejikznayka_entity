@@ -20,8 +20,16 @@ entity.ejikznayka_lesson.collection:
   # Checks for permission directly.
     _permission: 'administer lesson entity'
 
+entity.ejikznayka_lesson.add_page:
+  path: '/ejikznayka_lesson/add'
+  defaults:
+    _title: 'Add lesson'
+    _controller: '\Drupal\ejikznayka\Entity\Controller\LessonController::addPage'
+  requirements:
+    _entity_create_access: 'ejikznayka_lesson'
+
 entity.ejikznayka_lesson.add_form:
-  path: '/admin/ejikznayka_lesson/add/{ejikznayka_lesson_type}'
+  path: '/ejikznayka_lesson/add/{ejikznayka_lesson_type}'
   defaults:
     _controller: '\Drupal\ejikznayka\Entity\Controller\LessonController::addForm'
     _title: 'Add lesson'
