@@ -3,6 +3,7 @@
 namespace Drupal\ejikznayka\Entity\Controller;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\ejikznayka\LessonInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Url;
 
@@ -40,6 +41,7 @@ class LessonListBuilder extends EntityListBuilder {
   public function buildHeader() {
     $header['id'] = $this->t('LessonID');
     $header['name'] = $this->t('Title');
+    $header['type'] = $this->t('Lesson type');
     return $header + parent::buildHeader();
   }
 
@@ -50,6 +52,7 @@ class LessonListBuilder extends EntityListBuilder {
     /* @var $entity \Drupal\ejikznayka\Entity\Lesson */
     $row['id'] = $entity->id();
     $row['name'] = $entity->link();
+    $row['type'] = $entity->bundle();
     return $row + parent::buildRow($entity);
   }
 
