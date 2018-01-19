@@ -68,7 +68,7 @@ class ScenarioDefaultWidget extends WidgetBase {
         '#step' => 0.1,
         '#min' => 0.1,
         '#max' => 5,
-        '#default_value' => $items[$delta]->get('display_settings')->get('interval')->getCastedValue(),
+        '#default_value' => $items[$delta]->get('display_settings')->get('interval')->getValue(),
         '#required' => TRUE,
       ],
       'font_size' => [
@@ -77,7 +77,7 @@ class ScenarioDefaultWidget extends WidgetBase {
         '#step' => 4,
         '#min' => 20,
         '#max' => 100,
-        '#default_value' => $items[$delta]->get('display_settings')->get('font_size')->getCastedValue(),
+        '#default_value' => $items[$delta]->get('display_settings')->get('font_size')->getValue(),
         '#required' => TRUE,
       ],
       'column' => [
@@ -88,20 +88,20 @@ class ScenarioDefaultWidget extends WidgetBase {
           'column' => $this->t('In column'),
           'line' => $this->t('In line'),
         ],
-        '#default_value' => $items[$delta]->get('display_settings')->get('column')->getCastedValue(),
+        '#default_value' => $items[$delta]->get('display_settings')->get('column')->getValue(),
         '#required' => TRUE,
       ],
       'keep' => [
         '#type' => 'checkbox',
         '#title' => $display_definition->getPropertyDefinition('keep')->getLabel(),
         '#description' => $this->t("Doesn't have any effect if numbers are displayed by one"),
-        '#default_value' => $items[$delta]->get('display_settings')->get('keep')->getCastedValue(),
+        '#default_value' => $items[$delta]->get('display_settings')->get('keep')->getValue(),
       ],
       'random_location' => [
         '#type' => 'checkbox',
         '#title' => $display_definition->getPropertyDefinition('random_location')->getLabel(),
         '#description' => $this->t("Doesn't have any effect if numbers are displayed in column"),
-        '#default_value' => $items[$delta]->get('display_settings')->get('random_location')->getCastedValue(),
+        '#default_value' => $items[$delta]->get('display_settings')->get('random_location')->getValue(),
       ],
     ];
     return $element;
