@@ -23,7 +23,16 @@ class ScenarioDefaultWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $element['count'] = [
+    $element['tabs'] = [
+      '#type' => 'vertical_tabs',
+      '#default_tab' => 'display_settings',
+    ];
+    $element['main'] = [
+      '#type' => 'details',
+      '#group' => 'tabs',
+      '#title' => $this->t('Main settings'),
+    ];
+    $element['main']['count'] = [
       '#type' => 'number',
       '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('count')->getLabel(),
       '#size' => 3,
@@ -33,8 +42,14 @@ class ScenarioDefaultWidget extends WidgetBase {
       //  '#default_value' => $this->getSetting('count'),
       '#required' => TRUE,
     ];
+    $element['main']['minus'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('minus')->getLabel(),
+      '#default_value' => $items[$delta]->minus,
+    ];
     $element['range'] = [
-      '#type' => 'fieldgroup',
+      '#type' => 'details',
+      '#group' => 'tabs',
       '#title' => $this->t('Range of numbers'),
       'min' => [
         '#type' => 'number',
@@ -51,15 +66,12 @@ class ScenarioDefaultWidget extends WidgetBase {
         '#default_value' => $items[$delta]->max ?: 1,
       ],
     ];
-    $element['minus'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('minus')->getLabel(),
-      '#default_value' => $items[$delta]->minus,
-    ];
+
     /** @var \Drupal\ejikznayka\TypedData\DisplaySettingsDataDefinition $display_definition */
     $display_definition = $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('display_settings');
     $element['display_settings'] = [
-      '#type' => 'fieldgroup',
+      '#type' => 'details',
+      '#group' => 'tabs',
       '#title' => $display_definition->getLabel(),
       'interval' => [
         '#type' => 'number',
@@ -124,8 +136,8 @@ class ScenarioDefaultWidget extends WidgetBase {
     foreach ($values as $delta => $item_values) {
       $sequence = $positions = [];
       $sum = 0;
-      for ($i = 0; $i < $item_values['count']; $i++) {
-        if ($item_values['minus'] && $sum > $item_values['range']['min'] && mt_rand(1, 2) == 1) {
+      for ($i = 0; $i < $item_values['main']['count']; $i++) {
+        if ($item_values['main']['minus'] && $sum > $item_values['range']['min'] && mt_rand(1, 2) == 1) {
           $sequence[$i] = -mt_rand($item_values['range']['min'], min($sum, $item_values['range']['max']));
         }
         else {
@@ -157,9 +169,9 @@ class ScenarioDefaultWidget extends WidgetBase {
 
       $return_values[$delta]['sequence'] = $sequence;
       $return_values[$delta]['positions'] = $positions;
-      $return_values[$delta]['minus'] = (bool) $item_values['minus'];
+      $return_values[$delta]['minus'] = (bool) $item_values['main']['minus'];
       $return_values[$delta] += $item_values['range'];
-      $return_values[$delta]['count'] = $item_values['count'];
+      $return_values[$delta]['count'] = $item_values['main']['count'];
       $return_values[$delta]['display_settings'] = $item_values['display_settings'];
     }
     return $return_values;
