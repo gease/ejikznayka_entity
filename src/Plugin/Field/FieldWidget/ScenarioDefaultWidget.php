@@ -96,12 +96,22 @@ class ScenarioDefaultWidget extends WidgetBase {
         '#title' => $display_definition->getPropertyDefinition('keep')->getLabel(),
         '#description' => $this->t("Doesn't have any effect if numbers are displayed by one"),
         '#default_value' => $items[$delta]->get('display_settings')->get('keep')->getValue(),
+        '#states' => [
+          'invisible' => [
+            ':input[name="' . $items->getName() . '[' . $delta . '][display_settings][column]"]' => ['value' => 'single'],
+          ],
+        ],
       ],
       'random_location' => [
         '#type' => 'checkbox',
         '#title' => $display_definition->getPropertyDefinition('random_location')->getLabel(),
         '#description' => $this->t("Doesn't have any effect if numbers are displayed in column"),
         '#default_value' => $items[$delta]->get('display_settings')->get('random_location')->getValue(),
+        '#states' => [
+          'visible' => [
+            ':input[name="' . $items->getName() . '[' . $delta . '][display_settings][column]"]' => ['value' => 'single'],
+          ],
+        ],
       ],
     ];
     return $element;
