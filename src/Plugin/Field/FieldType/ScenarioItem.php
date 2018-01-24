@@ -110,6 +110,13 @@ class ScenarioItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public function isEmpty() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   /**public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::fieldSettingsForm($form, $form_state);
     $form['minus'] = [
