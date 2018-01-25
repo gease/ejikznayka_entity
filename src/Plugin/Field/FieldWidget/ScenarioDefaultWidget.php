@@ -188,10 +188,15 @@ class ScenarioDefaultWidget extends WidgetBase {
     $title = $this->fieldDefinition->getLabel();
     $description = FieldFilteredMarkup::create(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
     $is_multiple = ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) || (count($items) > 1);
-    $max = count($items);
+    // We add or remove items via $field_state.
+    $max = $field_state['items_count'];
     $elements = [];
 
     for ($delta = 0; $delta < $max; $delta++) {
+
+      if (!isset($items[$delta])) {
+        $items->appendItem();
+      }
 
       // For multiple fields, title and description are handled by the wrapping
       // table.
@@ -232,7 +237,7 @@ class ScenarioDefaultWidget extends WidgetBase {
       }
     }
 
-    if ($elements) {
+//    if ($elements) {
       $elements += [
         '#theme' => 'field_multiple_value_form',
         '#field_name' => $field_name,
@@ -241,7 +246,7 @@ class ScenarioDefaultWidget extends WidgetBase {
         '#required' => $this->fieldDefinition->isRequired(),
         '#title' => $title,
         '#description' => $description,
-        '#max_delta' => $max,
+        '#max_delta' => $max - 1,
       ];
 
       // Add 'add more' button, if not working with a programmed form.
@@ -264,7 +269,7 @@ class ScenarioDefaultWidget extends WidgetBase {
           ],
         ];
       }
-    }
+//    }
     return $elements;
   }
 
@@ -300,6 +305,7 @@ class ScenarioDefaultWidget extends WidgetBase {
     $field_parents = $element['#field_parents'];
     $field_state = static::getWidgetState($field_parents, $field_name, $form_state);
     $field_state['items'] = NestedArray::getValue($form_state->getUserInput(), $parents);
+    $field_state['items_count'] = count($field_state['items']);
     static::setWidgetState($field_parents, $field_name, $form_state, $field_state);
 
     $form_state->setRebuild();
