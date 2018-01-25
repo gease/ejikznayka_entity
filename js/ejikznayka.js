@@ -1,6 +1,6 @@
 (function ($) {
   'use strict';
-  $.fn.ejikznayka = function (sequence = [], positions = [], options = {}) {
+  $.fn.ejikznayka = function (sequence = [], positions = [], options = {}, item = {}) {
     // Throw an error if sequence or positions is empty
     // or their lengths do not match.
     if (!Array.isArray(sequence) || sequence.length === 0) {
@@ -55,6 +55,9 @@
     const $correct_answer_placeholder = $correct_answer.children('.correct_answer_placeholder');
     $display.css('font-size', options.font_size + 'px');
     $display.children('.mark').css('font-size', (3 * options.font_size / 4) + 'px');
+    if (!$('.' + item.field + ' .field__item:eq(' + (item.delta + 1) + ')').length) {
+      $controls.children('.next').remove();
+    }
 
     // End region variables.
     // Finish setup.
@@ -164,6 +167,10 @@
         const $your_answer = $display.children('.your_answer');
         $your_answer.children('.your_answer_placeholder').html(this.value);
         $your_answer.css('display', 'block');
+      });
+      $controls.children('.next').click(function () {
+        $block.children('.ejikznayka_close').click();
+        $('.' + item.field + ' .field__item:eq(' + item.delta + ')  button.ejikznayka_page').click();
       });
     };
     attachHandlers.call(this);
