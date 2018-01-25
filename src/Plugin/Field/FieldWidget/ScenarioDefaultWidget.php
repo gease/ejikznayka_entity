@@ -157,7 +157,8 @@ class ScenarioDefaultWidget extends WidgetBase {
             ],
           ],*/
         ],
-        '#limit_validation_errors' => [[$items->getName(), $delta]],
+        // We don't perform any validation when removing an element.
+        '#limit_validation_errors' => [],
         '#submit' => [[get_class($this), 'removeSubmit']],
       ];
     }
