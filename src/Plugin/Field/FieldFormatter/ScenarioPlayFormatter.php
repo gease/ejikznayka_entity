@@ -43,11 +43,13 @@ class ScenarioPlayFormatter extends FormatterBase {
         '#attached' => [
           'drupalSettings' => [
             'ejikznayka' => [
-              'field--name-' . Html::getClass($items->getName()) => [
-                $delta => [
-                  'options' => $js_config,
-                  'sequence' => $item->sequence,
-                  'positions' => $item->positions,
+              'fields' => [
+                'field--name-' . Html::getClass($items->getName()) => [
+                  $delta => [
+                    'options' => $js_config,
+                    'sequence' => $item->sequence,
+                    'positions' => $item->positions,
+                  ],
                 ],
               ],
             ],

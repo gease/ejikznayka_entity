@@ -60,7 +60,7 @@
     // Finish setup.
     const showResult = function () {
       $display.css('display', 'flex');
-      $controls.children('.start').css('display', 'block');
+      $controls.children('.start').css('display', 'block').val(Drupal.t('Repeat'));
       $block.children('.ejikznayka_close').css('display', 'block');
       $controls.children().show();
 
