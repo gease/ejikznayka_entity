@@ -26,9 +26,14 @@ class ScenarioItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
+    $properties['title'] = DataDefinition::create('string')
+      ->setLabel(t('Title'))
+      ->setDescription(t("Title for the task."))
+      ->setRequired(TRUE);
+
     $properties['sequence'] = ListDataDefinition::create('integer')
       ->setLabel(t('Numbers'))
-      ->setDescription(t("Sequence of numbers to be displayed during the lesson."))
+      ->setDescription(t("Sequence of numbers to be displayed during the task."))
       ->setRequired(TRUE);
 
     $properties['positions'] = ListDataDefinition::create('ejikznayka_position')
@@ -65,6 +70,11 @@ class ScenarioItem extends FieldItemBase {
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return [
       'columns' => [
+        'title' => [
+          'description' => "Title.",
+          'type' => 'varchar',
+          'length' => 128,
+        ],
         'sequence' => [
           'description' => "Serialized sequence.",
           'type' => 'blob',
@@ -103,6 +113,11 @@ class ScenarioItem extends FieldItemBase {
           'type' => 'blob',
           'serialize' => TRUE,
         ],
+      ],
+      'indexes' => [
+        'title' => ['title'],
+        'count' => ['count'],
+        'minmax' => ['min', 'max'],
       ],
     ];
   }

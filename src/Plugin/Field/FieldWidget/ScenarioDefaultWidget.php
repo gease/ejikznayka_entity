@@ -38,6 +38,13 @@ class ScenarioDefaultWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $element['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Title for the task'),
+      '#description' => $this->t('Title that will appear as a header for the task.'),
+      '#required' => TRUE,
+      '#default_value' => $items[$delta]->title,
+    ];
     $element['tabs'] = [
       '#type' => 'vertical_tabs',
       '#default_tab' => 'display_settings',
@@ -151,11 +158,6 @@ class ScenarioDefaultWidget extends WidgetBase {
           // are resolved in context of entity form class.
           'callback' => [get_class($this), 'removeAjax'],
           'wrapper' => $this->getAjaxWrapperId($form),
-          /*'options' => [
-            'query' => [
-              'element_parents' => $items->getName() . '/' . $delta,
-            ],
-          ],*/
         ],
         // We don't perform any validation when removing an element.
         '#limit_validation_errors' => [],
@@ -349,7 +351,7 @@ class ScenarioDefaultWidget extends WidgetBase {
         }
         $positions[] = $position;
       }
-
+      $return_values[$delta]['title'] = $item_values['title'];
       $return_values[$delta]['sequence'] = $sequence;
       $return_values[$delta]['positions'] = $positions;
       $return_values[$delta]['minus'] = (bool) $item_values['main']['minus'];
