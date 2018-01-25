@@ -8,12 +8,13 @@
  * - correct_emoticon: url for image file supplied by the user for displaying with incorrect answer.
  * - incorrect_audio: url for audio file supplied by the administrator for playing with incorrect answer.
  * - correct_audio: url for audio file supplied by the administrator for playing with incorrect answer.
+   - title: task title.
  * @ingroup themeable
  */
 #}
 
 {{ attach_library('ejikznayka/ejikznayka') }}
-<button class="ejikznayka_page">{{ 'Go to the exercise page'|t }}</button>
+<button class="ejikznayka_page">{{ title }}</button>
 <div class="overlay">
   <div class="ejikznayka_close"></div>
   <div class="ejikznayka_controls">
@@ -24,6 +25,7 @@
     <input type="button" name="next" class="next" value="{{ 'Next task'|t }}"/>
   </div>
   <div class="ejikznayka_display">
+    <div class="title">{{ title }}</div>
     <div class="mark">
       {{ "Mark for the response"|t }}
       <span class="mark_placeholder"></span>

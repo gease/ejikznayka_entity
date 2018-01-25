@@ -62,6 +62,7 @@ class ScenarioPlayFormatter extends FormatterBase {
           $elements[$delta]['#' . $file_key] = isset($file) ? $file->url() : '';
         }
       }
+      $elements[$delta]['#title'] = $item->title;
     }
     return $elements;
   }

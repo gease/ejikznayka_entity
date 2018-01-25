@@ -145,7 +145,7 @@
         state.current = 0;
         // correct_answer.style.display = 'none';
         $controls.children('.input_answer').val('');
-        $display.children().hide();
+        $display.children(':not(".title")').hide();
         $show.html('').css('display', 'block');
         hideControls();
         changeNumber();

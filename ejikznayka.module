@@ -108,6 +108,7 @@ function ejikznayka_theme($existing, $type, $theme, $path) {
         'incorrect_emoticon' => NULL,
         'correct_audio' => NULL,
         'incorrect_audio' => NULL,
+        'title' => t('Fulfill the task'),
       ],
     ],
     'ejikznayka_lesson_add_list' => [

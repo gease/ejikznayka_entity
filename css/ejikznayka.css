@@ -75,5 +75,10 @@ input[type='number'] {
 }
 .mark {
   position: absolute;
+  top: 15%;
+}
+.ejikznayka_display .title {
+  display: block;
+  position: absolute;
   top: 5%;
 }
