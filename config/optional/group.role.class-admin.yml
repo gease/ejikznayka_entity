@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.class
+id: class-admin
+label: Admin
+weight: 100
+internal: false
+audience: member
+group_type: class
+permissions_ui: true
+permissions:
+  - 'access content overview'
+  - 'administer group'
+  - 'delete group'
+  - 'edit group'
+  - 'view group'
+  - 'administer members'
+  - 'update own group_membership content'
+  - 'view group_membership content'
+  - 'access group_node overview'
