@@ -4,3 +4,6 @@ description: Creates fields and entities implementing math learning fuctionality
 package: Ejik Znayka
 core: 8.x
 php: 7.0
+
+dependencies:
+  - 'group'

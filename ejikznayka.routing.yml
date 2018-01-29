@@ -85,3 +85,7 @@ entity.ejikznayka_lesson_type.collection:
     _title: 'Lesson type'
   requirements:
     _permission: 'administer ejikznayka'
+
+# Group callbacks.
+route_callbacks:
+  - '\Drupal\ejikznayka\Routing\GroupLessonRouteProvider::getRoutes'
