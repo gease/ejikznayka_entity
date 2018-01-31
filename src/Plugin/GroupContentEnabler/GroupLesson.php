@@ -81,4 +81,13 @@ class GroupLesson extends GroupContentEnablerBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    $dependencies['config'][] = 'ejikznayka.lesson.' . $this->getEntityBundle();
+    return $dependencies;
+  }
+
 }
