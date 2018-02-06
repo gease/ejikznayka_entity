@@ -98,12 +98,9 @@ display:
         type: fields
       fields:
         name:
+          id: name
           table: ejikznayka_lesson
           field: name
-          id: name
-          entity_type: null
-          entity_field: name
-          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
@@ -150,7 +147,8 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: string
-          settings: {  }
+          settings:
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -161,6 +159,9 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+          entity_type: null
+          entity_field: name
+          plugin_id: field
         created:
           id: created
           table: ejikznayka_lesson
@@ -344,49 +345,7 @@ display:
           destination: true
           entity_type: ejikznayka_lesson
           plugin_id: entity_operations
-      filters:
-        ejtid:
-          id: ejtid
-          table: ejikznayka_lesson
-          field: ejtid
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: in
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: ejtid_op
-            label: 'Lesson type'
-            description: ''
-            use_operator: false
-            operator: ejtid_op
-            identifier: ejtid
-            required: false
-            remember: false
-            multiple: true
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              teacher: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: ejikznayka_lesson
-          entity_field: ejtid
-          plugin_id: bundle
+      filters: {  }
       sorts: {  }
       title: 'Group lessons'
       header: {  }
