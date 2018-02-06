@@ -55,6 +55,7 @@
     const $correct_answer_placeholder = $correct_answer.children('.correct_answer_placeholder');
     $display.css('font-size', options.font_size + 'px');
     $display.children('.mark').css('font-size', (3 * options.font_size / 4) + 'px');
+    // @TODO Change below to classes 'processed'.
     if (!$('.' + item.field + ' .field__item:eq(' + (item.delta + 1) + ')').length) {
       $controls.children('.next').remove();
     }
@@ -66,7 +67,7 @@
       $controls.children('.start').css('display', 'block').val(Drupal.t('Repeat'));
       $block.children('.ejikznayka_close').css('display', 'block');
       $controls.children().show();
-
+      $controls.children('.input_answer').focus();
     };
     const checkAnswer = function () {
       $display.children('.mark').css('display', 'block');
