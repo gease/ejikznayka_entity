@@ -24,8 +24,10 @@
         const options = {};
         let sequence = [];
         const target = $(this).data('ejikznayka-target');
-        options.max = +$(this).siblings('.' + target + '-max').children('input').val();
-        options.min = +$(this).siblings('.' + target + '-min').children('input').val();
+        options.max = $(this).siblings('.' + target + '-max').children('input').val();
+        options.min = $(this).siblings('.' + target + '-min').children('input').val();
+        options.count = $(this).siblings('.' + target + '-count').children('input').val();
+        options.minus = $(this).siblings('.' + target + '-minus').children('input').prop('checked');
         sequence = $.ejikznayka.generate(options);
         $(this).siblings('.' + target + '-sequence').children('input').val(sequence.join());
       });

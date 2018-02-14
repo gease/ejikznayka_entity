@@ -193,6 +193,20 @@
         count: 3,
         minus: true
       };
+      // Check and typecast supplied options.
+      for (let key in ['min', 'max', 'count']) {
+        if (options.hasOwnProperty(key)) {
+          if (isNaN(+options.key)) {
+            throw new Error('Incorrect option supplied');
+          }
+          else {
+            options.key = +options.key;
+          }
+        }
+      }
+      if (options.hasOwnProperty('minus')) {
+        options.minus = Boolean(options.minus);
+      }
       options = $.extend({}, defaults, options || {});
       let sequence = [];
       let res = 0;

@@ -69,49 +69,53 @@ class ScenarioDefaultWidget extends WidgetBase {
       '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('minus')->getLabel(),
       '#default_value' => $items[$delta]->minus,
     ];
-    $element['range'] = [
+    /*$element['range'] = [
       '#type' => 'details',
       '#group' => 'tabs',
-      '#title' => $this->t('Range of numbers'),
-      'min' => [
-        '#type' => 'number',
-        '#title' => $this->t('From'),
-        '#min' => 0,
-        //'#max' => 999999,
-        '#default_value' => $items[$delta]->min ?: 1,
-        '#attributes' => [
-          'class' => ['ejikznayka-min'],
-        ],
+      '#title' => $this->t('Range of numbers'),*/
+    $element['main']['min'] = [
+      '#type' => 'number',
+      '#title' => $this->t('From'),
+      '#min' => 0,
+      //'#max' => 999999,
+      '#default_value' => $items[$delta]->min ?: 1,
+      '#attributes' => [
+        'class' => ['ejikznayka-min'],
       ],
-      'max' => [
-        '#type' => 'number',
-        '#title' => $this->t('To', array(), array('context' => 'Range')),
-        '#min' => 0,
-        //'#max' => 999999,
-        '#default_value' => $items[$delta]->max ?: 1,
-        '#attributes' => [
-          'class' => ['ejikznayka-max'],
-        ],
+    ];
+    $element['main']['max'] = [
+      '#type' => 'number',
+      '#title' => $this->t('To', [], ['context' => 'Range']),
+      '#min' => 0,
+      //'#max' => 999999,
+      '#default_value' => $items[$delta]->max ?: 1,
+      '#attributes' => [
+        'class' => ['ejikznayka-max'],
       ],
-      'sequence' => [
-        '#type' => 'textfield',
-        '#title' => t('Sequence'),
-        '#default_value' => $items[$delta]->sequence ? implode(',', $items[$delta]->sequence) : '',
+    ];
+    $element['main']['sequence'] = [
+      '#type' => 'textfield',
+      '#title' => t('Sequence'),
+      '#default_value' => $items[$delta]->sequence ? implode(',', $items[$delta]->sequence) : '',
+    ];
+    $element['main']['generate'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'input',
+      '#attributes' => [
+        'type' => 'button',
+        'value' => t('Generate sequence'),
+        'class' => 'button',
+        'name' => 'generate',
+        'data-ejikznayka-target' => Html::getClass(implode('-', [
+          'form-item',
+          $items->getName(),
+          $delta,
+          'main',
+        ])),
       ],
-      'generate' => [
-        '#type' => 'html_tag',
-        '#tag' => 'input',
-        '#attributes' => [
-          'type' => 'button',
-          'value' => t('Generate sequence'),
-          'class' => 'button',
-          'name' => 'generate',
-          'data-ejikznayka-target' => Html::getClass(implode('-', ['form-item', $items->getName(), $delta, 'range'])),
-        ],
-        '#attached' => [
-          'library' => [
-            'ejikznayka/ejikznayka',
-          ],
+      '#attached' => [
+        'library' => [
+          'ejikznayka/ejikznayka',
         ],
       ],
     ];
