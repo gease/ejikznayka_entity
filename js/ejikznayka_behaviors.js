@@ -1,7 +1,7 @@
 (function ($) {
   'use strict';
   // @TODO: though we are using behaviors, this is not likely to work with Ajax.
-  Drupal.behaviors.ejikznayka = {
+  Drupal.behaviors.ejikznaykaPlay = {
     attach: function (context, settings) {
       let item = {};
       for (let field in settings.ejikznayka.fields) {
@@ -16,6 +16,19 @@
           }
         }
       }
+    }
+  };
+  Drupal.behaviors.ejikznaykaAdmin = {
+    attach: function (context, settings) {
+      $('input[type="button"][name="generate"]', context).click(function () {
+        const options = {};
+        let sequence = [];
+        const target = $(this).data('ejikznayka-target');
+        options.max = +$(this).siblings('.' + target + '-max').children('input').val();
+        options.min = +$(this).siblings('.' + target + '-min').children('input').val();
+        sequence = $.ejikznayka.generate(options);
+        $(this).siblings('.' + target + '-sequence').children('input').val(sequence.join());
+      });
     }
   };
 })(jQuery);

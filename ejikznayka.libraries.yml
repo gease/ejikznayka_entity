@@ -2,7 +2,7 @@ ejikznayka:
   version: 1.x
   js:
     js/ejikznayka.js: {}
-    js/ejikznayka_play_formatter.js: {}
+    js/ejikznayka_behaviors.js: {}
   css:
     component:
       css/ejikznayka.css: {}

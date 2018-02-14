@@ -79,6 +79,9 @@ class ScenarioDefaultWidget extends WidgetBase {
         '#min' => 0,
         //'#max' => 999999,
         '#default_value' => $items[$delta]->min ?: 1,
+        '#attributes' => [
+          'class' => ['ejikznayka-min'],
+        ],
       ],
       'max' => [
         '#type' => 'number',
@@ -86,6 +89,30 @@ class ScenarioDefaultWidget extends WidgetBase {
         '#min' => 0,
         //'#max' => 999999,
         '#default_value' => $items[$delta]->max ?: 1,
+        '#attributes' => [
+          'class' => ['ejikznayka-max'],
+        ],
+      ],
+      'sequence' => [
+        '#type' => 'textfield',
+        '#title' => t('Sequence'),
+        '#default_value' => $items[$delta]->sequence ? implode(',', $items[$delta]->sequence) : '',
+      ],
+      'generate' => [
+        '#type' => 'html_tag',
+        '#tag' => 'input',
+        '#attributes' => [
+          'type' => 'button',
+          'value' => t('Generate sequence'),
+          'class' => 'button',
+          'name' => 'generate',
+          'data-ejikznayka-target' => Html::getClass(implode('-', ['form-item', $items->getName(), $delta, 'range'])),
+        ],
+        '#attached' => [
+          'library' => [
+            'ejikznayka/ejikznayka',
+          ],
+        ],
       ],
     ];
 
@@ -240,39 +267,38 @@ class ScenarioDefaultWidget extends WidgetBase {
       }
     }
 
-//    if ($elements) {
-      $elements += [
-        '#theme' => 'field_multiple_value_form',
-        '#field_name' => $field_name,
-        '#cardinality' => $cardinality,
-        '#cardinality_multiple' => $this->fieldDefinition->getFieldStorageDefinition()->isMultiple(),
-        '#required' => $this->fieldDefinition->isRequired(),
-        '#title' => $title,
-        '#description' => $description,
-        '#max_delta' => $max - 1,
+    $elements += [
+      '#theme' => 'field_multiple_value_form',
+      '#field_name' => $field_name,
+      '#cardinality' => $cardinality,
+      '#cardinality_multiple' => $this->fieldDefinition->getFieldStorageDefinition()
+        ->isMultiple(),
+      '#required' => $this->fieldDefinition->isRequired(),
+      '#title' => $title,
+      '#description' => $description,
+      '#max_delta' => $max - 1,
+    ];
+
+    // Add 'add more' button, if not working with a programmed form.
+    if ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && !$form_state->isProgrammed()) {
+      $id_prefix = implode('-', array_merge($parents, [$field_name]));
+      $elements['#prefix'] = '<div id="' . $this->getAjaxWrapperId($form) . '">';
+      $elements['#suffix'] = '</div>';
+
+      $elements['add_more'] = [
+        '#type' => 'submit',
+        '#name' => strtr($id_prefix, '-', '_') . '_add_more',
+        '#value' => t('Add another item'),
+        '#attributes' => ['class' => ['field-add-more-submit']],
+        '#limit_validation_errors' => [array_merge($parents, [$field_name])],
+        '#submit' => [[get_class($this), 'addMoreSubmit']],
+        '#ajax' => [
+          'callback' => [get_class($this), 'addMoreAjax'],
+          'wrapper' => $this->getAjaxWrapperId($form),
+          'effect' => 'fade',
+        ],
       ];
-
-      // Add 'add more' button, if not working with a programmed form.
-      if ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && !$form_state->isProgrammed()) {
-        $id_prefix = implode('-', array_merge($parents, [$field_name]));
-        $elements['#prefix'] = '<div id="' . $this->getAjaxWrapperId($form) . '">';
-        $elements['#suffix'] = '</div>';
-
-        $elements['add_more'] = [
-          '#type' => 'submit',
-          '#name' => strtr($id_prefix, '-', '_') . '_add_more',
-          '#value' => t('Add another item'),
-          '#attributes' => ['class' => ['field-add-more-submit']],
-          '#limit_validation_errors' => [array_merge($parents, [$field_name])],
-          '#submit' => [[get_class($this), 'addMoreSubmit']],
-          '#ajax' => [
-            'callback' => [get_class($this), 'addMoreAjax'],
-            'wrapper' => $this->getAjaxWrapperId($form),
-            'effect' => 'fade',
-          ],
-        ];
-      }
-//    }
+    }
     return $elements;
   }
 
