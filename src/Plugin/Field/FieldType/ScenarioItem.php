@@ -18,6 +18,7 @@ use Drupal\ejikznayka\TypedData\DisplaySettingsDataDefinition;
  *   description = @Translation("Create and save scenario for math learning."),
  *   default_widget = "ejikznayka_scenario_default",
  *   default_formatter = "ejikznayka_scenario_play",
+ *   constraints = {"Scenario" = {}},
  * )
  */
 class ScenarioItem extends FieldItemBase {

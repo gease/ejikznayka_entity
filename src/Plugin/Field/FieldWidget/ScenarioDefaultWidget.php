@@ -352,11 +352,11 @@ class ScenarioDefaultWidget extends WidgetBase {
       $sequence = $positions = [];
       $sum = 0;
       for ($i = 0; $i < $item_values['main']['count']; $i++) {
-        if ($item_values['main']['minus'] && $sum > $item_values['range']['min'] && mt_rand(1, 2) == 1) {
-          $sequence[$i] = -mt_rand($item_values['range']['min'], min($sum, $item_values['range']['max']));
+        if ($item_values['main']['minus'] && $sum > $item_values['main']['min'] && mt_rand(1, 2) == 1) {
+          $sequence[$i] = -mt_rand($item_values['main']['min'], min($sum, $item_values['main']['max']));
         }
         else {
-          $sequence[$i] = mt_rand($item_values['range']['min'], $item_values['range']['max']);
+          $sequence[$i] = mt_rand($item_values['main']['min'], $item_values['main']['max']);
         }
         $sum += $sequence[$i];
         // Generate random position.
@@ -385,7 +385,8 @@ class ScenarioDefaultWidget extends WidgetBase {
       $return_values[$delta]['sequence'] = $sequence;
       $return_values[$delta]['positions'] = $positions;
       $return_values[$delta]['minus'] = (bool) $item_values['main']['minus'];
-      $return_values[$delta] += $item_values['range'];
+      $return_values[$delta]['max'] = $item_values['main']['max'];
+      $return_values[$delta]['min'] = $item_values['main']['min'];
       $return_values[$delta]['count'] = $item_values['main']['count'];
       $return_values[$delta]['display_settings'] = $item_values['display_settings'];
     }
