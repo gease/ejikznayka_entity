@@ -382,7 +382,7 @@ class ScenarioDefaultWidget extends WidgetBase {
         $positions[] = $position;
       }
       $return_values[$delta]['title'] = $item_values['title'];
-      $return_values[$delta]['sequence'] = $sequence;
+      $return_values[$delta]['sequence'] = explode(',', $item_values['main']['sequence']);
       $return_values[$delta]['positions'] = $positions;
       $return_values[$delta]['minus'] = (bool) $item_values['main']['minus'];
       $return_values[$delta]['max'] = $item_values['main']['max'];
