@@ -97,6 +97,7 @@ class ScenarioDefaultWidget extends WidgetBase {
       '#type' => 'textfield',
       '#title' => t('Sequence'),
       '#default_value' => $items[$delta]->sequence ? implode(',', $items[$delta]->sequence) : '',
+      '#required' => TRUE,
     ];
     $element['main']['generate'] = [
       '#type' => 'html_tag',
