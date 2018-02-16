@@ -194,13 +194,13 @@
         minus: true
       };
       // Check and typecast supplied options.
-      for (let key in ['min', 'max', 'count']) {
+      for (let key of ['min', 'max', 'count']) {
         if (options.hasOwnProperty(key)) {
-          if (isNaN(+options.key)) {
+          if (isNaN(+options[key])) {
             throw new Error('Incorrect option supplied');
           }
           else {
-            options.key = +options.key;
+            options[key] = +options[key];
           }
         }
       }
@@ -208,6 +208,12 @@
         options.minus = Boolean(options.minus);
       }
       options = $.extend({}, defaults, options || {});
+      if (options.min > options.max) {
+        throw new Error('Min cannot be greater than max');
+      }
+      if (options.min < 0) {
+        throw new Error('Min and max shold be positive');
+      }
       let sequence = [];
       let res = 0;
       let range = options.max - options.min;
