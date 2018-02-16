@@ -131,6 +131,23 @@ class ScenarioItem extends FieldItemBase {
   }
 
   /**
+   * @inheritDoc
+   */
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = [];
+    $element['store'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Store scenario instead of random generation on-the-fly'),
+      '#description' => t('If checked, scenario in this field will be stored in the database and each time replayed the same.
+            If not checked, each time it will be generated according to settings just when played, and each time will be different '),
+      '#default_value' => $this->getSetting('store'),
+      '#disabled' => $has_data,
+    ];
+    return $element;
+  }
+
+
+  /**
    * {@inheritdoc}
    */
   /**public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
