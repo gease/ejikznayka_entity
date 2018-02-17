@@ -212,7 +212,7 @@
         throw new Error('Min cannot be greater than max');
       }
       if (options.min < 0) {
-        throw new Error('Min and max shold be positive');
+        throw new Error('Min and max should be positive');
       }
       let sequence = [];
       let res = 0;

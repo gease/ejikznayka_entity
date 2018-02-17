@@ -18,28 +18,53 @@ class ScenarioConstraintValidator extends ConstraintValidator {
     if (!($constraint instanceof ScenarioConstraint) || !($value instanceof ScenarioItem)) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\ScenarioConstraint');
     }
-    if(!($value instanceof ScenarioItem)) {
+    if (!($value instanceof ScenarioItem)) {
       throw new UnexpectedTypeException($value, '\Drupal\ejikznayka\Plugin\Field\FieldType\ScenarioItem');
     }
-    $violation = $this->validateRange($value, $constraint);
+
+    $violation = $this->validateMinMax($value, $constraint);
     if ($violation instanceof ConstraintViolationBuilderInterface) {
       $violation->atPath('sequence')->addViolation();
       return;
     }
-    $violation = $this->validateLength($value, $constraint);
-    if ($violation instanceof ConstraintViolationBuilderInterface) {
-      $violation->atPath('count')->addViolation();
-      return;
+
+    /* @var ScenarioItem $value */
+    if ($value->getFieldDefinition()->getSetting('store')) {
+      $violation = $this->validateRange($value, $constraint);
+      if ($violation instanceof ConstraintViolationBuilderInterface) {
+        $violation->atPath('sequence')->addViolation();
+        return;
+      }
+      $violation = $this->validateLength($value, $constraint);
+      if ($violation instanceof ConstraintViolationBuilderInterface) {
+        $violation->atPath('count')->addViolation();
+        return;
+      }
+      if ($value->minus) {
+        $violation = $this->checkAlwaysPositive($value, $constraint);
+      }
+      else {
+        $violation = $this->checkAllPositive($value, $constraint);
+      }
+      if ($violation instanceof ConstraintViolationBuilderInterface) {
+        $violation->atPath('sequence')->addViolation();
+        return;
+      }
     }
-    if ($value->minus) {
-      $violation = $this->checkAlwaysPositive($value, $constraint);
+  }
+
+  /**
+   * Check if limits are correct.
+   *
+   * @param \Drupal\ejikznayka\Plugin\Field\FieldType\ScenarioItem $value
+   * @param \Symfony\Component\Validator\Constraint $constraint*
+   */
+  private function validateMinMax($value, Constraint $constraint) {
+    if ($value->min > $value->max) {
+      return $this->context->buildViolation('Upper limit of range is lower than lower limit.');
     }
-    else {
-      $violation = $this->checkAllPositive($value, $constraint);
-    }
-    if ($violation instanceof ConstraintViolationBuilderInterface) {
-      $violation->atPath('sequence')->addViolation();
-      return;
+    if ($value->min < 0) {
+      return $this->context->buildViolation('Limits of range should be positive');
     }
   }
 

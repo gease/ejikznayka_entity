@@ -93,33 +93,35 @@ class ScenarioDefaultWidget extends WidgetBase {
         'class' => ['ejikznayka-max'],
       ],
     ];
-    $element['main']['sequence'] = [
-      '#type' => 'textfield',
-      '#title' => t('Sequence'),
-      '#default_value' => $items[$delta]->sequence ? implode(',', $items[$delta]->sequence) : '',
-      '#required' => TRUE,
-    ];
-    $element['main']['generate'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'input',
-      '#attributes' => [
-        'type' => 'button',
-        'value' => t('Generate sequence'),
-        'class' => 'button',
-        'name' => 'generate',
-        'data-ejikznayka-target' => Html::getClass(implode('-', [
-          'form-item',
-          $items->getName(),
-          $delta,
-          'main',
-        ])),
-      ],
-      '#attached' => [
-        'library' => [
-          'ejikznayka/ejikznayka',
+    if ($this->fieldDefinition->getSetting('store')) {
+      $element['main']['sequence'] = [
+        '#type' => 'textfield',
+        '#title' => t('Sequence'),
+        '#default_value' => $items[$delta]->sequence ? implode(',', $items[$delta]->sequence) : '',
+        '#required' => TRUE,
+      ];
+      $element['main']['generate'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'input',
+        '#attributes' => [
+          'type' => 'button',
+          'value' => t('Generate sequence'),
+          'class' => 'button',
+          'name' => 'generate',
+          'data-ejikznayka-target' => Html::getClass(implode('-', [
+            'form-item',
+            $items->getName(),
+            $delta,
+            'main',
+          ])),
         ],
-      ],
-    ];
+        '#attached' => [
+          'library' => [
+            'ejikznayka/ejikznayka',
+          ],
+        ],
+      ];
+    }
 
     /** @var \Drupal\ejikznayka\TypedData\DisplaySettingsDataDefinition $display_definition */
     $display_definition = $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('display_settings');
@@ -350,50 +352,47 @@ class ScenarioDefaultWidget extends WidgetBase {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as $delta => $item_values) {
-      $sequence = $positions = [];
-      $sum = 0;
-      for ($i = 0; $i < $item_values['main']['count']; $i++) {
-        if ($item_values['main']['minus'] && $sum > $item_values['main']['min'] && mt_rand(1, 2) == 1) {
-          $sequence[$i] = -mt_rand($item_values['main']['min'], min($sum, $item_values['main']['max']));
-        }
-        else {
-          $sequence[$i] = mt_rand($item_values['main']['min'], $item_values['main']['max']);
-        }
-        $sum += $sequence[$i];
-        // Generate random position.
-        $position = [];
-        $top = mt_rand(0, 50);
-        $left = mt_rand(0, 50);
-        if (mt_rand(1, 2) == 1) {
-          $position['top'] = $top . '%';
-          $position['bottom'] = '';
-        }
-        else {
-          $position['bottom'] = $top . '%';
-          $position['top'] = '';
-        }
-        if (mt_rand(1, 2) == 1) {
-          $position['left'] = $left . '%';
-          $position['right'] = '';
-        }
-        else {
-          $position['right'] = $left . '%';
-          $position['left'] = '';
-        }
-        $positions[] = $position;
-      }
       $return_values[$delta]['title'] = $item_values['title'];
-      $return_values[$delta]['sequence'] = explode(',', $item_values['main']['sequence']);
-      $return_values[$delta]['positions'] = $positions;
       $return_values[$delta]['minus'] = (bool) $item_values['main']['minus'];
       $return_values[$delta]['max'] = $item_values['main']['max'];
       $return_values[$delta]['min'] = $item_values['main']['min'];
       $return_values[$delta]['count'] = $item_values['main']['count'];
       $return_values[$delta]['display_settings'] = $item_values['display_settings'];
+      if ($this->fieldDefinition->getSetting('store')) {
+        $positions = [];
+        for ($i = 0; $i < $item_values['main']['count']; $i++) {
+          // Generate random position.
+          $position = [];
+          $top = mt_rand(0, 50);
+          $left = mt_rand(0, 50);
+          if (mt_rand(1, 2) == 1) {
+            $position['top'] = $top . '%';
+            $position['bottom'] = '';
+          }
+          else {
+            $position['bottom'] = $top . '%';
+            $position['top'] = '';
+          }
+          if (mt_rand(1, 2) == 1) {
+            $position['left'] = $left . '%';
+            $position['right'] = '';
+          }
+          else {
+            $position['right'] = $left . '%';
+            $position['left'] = '';
+          }
+          $positions[] = $position;
+        }
+        $return_values[$delta]['sequence'] = explode(',', $item_values['main']['sequence']);
+        $return_values[$delta]['positions'] = $positions;
+      }
     }
     return $return_values;
   }
 
+  /**
+   * Helper function for ajax add/remove item buttons.
+   */
   protected function getAjaxWrapperId($form) {
     $parents = $form['#parents'];
     return $parents ? implode('-', $parents) . '-' . $this->ajaxWrapperId : $this->ajaxWrapperId;

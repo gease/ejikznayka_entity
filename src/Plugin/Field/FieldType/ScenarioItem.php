@@ -32,14 +32,15 @@ class ScenarioItem extends FieldItemBase {
       ->setDescription(t("Title for the task."))
       ->setRequired(TRUE);
 
-    $properties['sequence'] = ListDataDefinition::create('integer')
-      ->setLabel(t('Numbers'))
-      ->setDescription(t("Sequence of numbers to be displayed during the task."))
-      ->setRequired(TRUE);
-
-    $properties['positions'] = ListDataDefinition::create('ejikznayka_position')
-      ->setLabel(t('Positions'))
-      ->setDescription(t("Positions of displayed numbers on the screen."));
+    if ($field_definition->getSetting('store')) {
+      $properties['sequence'] = ListDataDefinition::create('integer')
+        ->setLabel(t('Numbers'))
+        ->setDescription(t("Sequence of numbers to be displayed during the task."))
+        ->setRequired(TRUE);
+      $properties['positions'] = ListDataDefinition::create('ejikznayka_position')
+        ->setLabel(t('Positions'))
+        ->setDescription(t("Positions of displayed numbers on the screen."));
+    }
 
     $properties['max'] = DataDefinition::create('integer')
       ->setLabel(t('Maximal value'))
@@ -69,22 +70,12 @@ class ScenarioItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return [
+    $schema = [
       'columns' => [
         'title' => [
           'description' => "Title.",
           'type' => 'varchar',
           'length' => 128,
-        ],
-        'sequence' => [
-          'description' => "Serialized sequence.",
-          'type' => 'blob',
-          'serialize' => TRUE,
-        ],
-        'positions' => [
-          'description' => "Serialized position css values.",
-          'type' => 'blob',
-          'serialize' => TRUE,
         ],
         'max' => [
           'description' => "Maximal value",
@@ -121,6 +112,19 @@ class ScenarioItem extends FieldItemBase {
         'minmax' => ['min', 'max'],
       ],
     ];
+    if ($field_definition->getSetting('store')) {
+      $schema['columns']['sequence'] = [
+        'description' => "Serialized sequence.",
+        'type' => 'blob',
+        'serialize' => TRUE,
+      ];
+      $schema['columns']['positions'] = [
+        'description' => "Serialized position css values.",
+        'type' => 'blob',
+        'serialize' => TRUE,
+      ];
+    }
+    return $schema;
   }
 
   /**
@@ -129,6 +133,16 @@ class ScenarioItem extends FieldItemBase {
   public function isEmpty() {
     return FALSE;
   }
+
+  /**
+   * @inheritDoc
+   */
+  public static function defaultStorageSettings() {
+    return [
+      'store' => TRUE,
+    ];
+  }
+
 
   /**
    * @inheritDoc
