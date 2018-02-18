@@ -29,15 +29,22 @@ class ScenarioPlayFormatter extends FormatterBase {
     /** @var \Drupal\Core\TypedData\Plugin\DataType\ItemList $items */
     foreach ($items as $delta => $item) {
       $js_config = [
+        'store' => (bool) $item->getFieldDefinition()->getSetting('store'),
         'count' => $item->count,
         'interval' => $item->display_settings['interval'],
-        'minus' => $item->display_settings['minus'],
+        'minus' => (bool) $item->minus,
         'keep' => ($item->display_settings['column'] == 'single' ? FALSE : $item->display_settings['keep']),
         'random_location' => $item->display_settings['random_location'],
 //        'mark' => $config['mark'],
         'column' => $item->display_settings['column'],
         'font_size' => $item->display_settings['font_size'],
       ];
+      $js_settings = [];
+      $js_settings['options'] = $js_config;
+      if ($item->getFieldDefinition()->getSetting('store')) {
+        $js_settings['sequence'] = $item->sequence;
+        $js_settings['positions'] = $item->positions;
+      }
       $elements[$delta] = [
         '#theme' => 'ejikznayka_play_formatter',
         '#attached' => [
@@ -45,11 +52,7 @@ class ScenarioPlayFormatter extends FormatterBase {
             'ejikznayka' => [
               'fields' => [
                 'field--name-' . Html::getClass($items->getName()) => [
-                  $delta => [
-                    'options' => $js_config,
-                    'sequence' => $item->sequence,
-                    'positions' => $item->positions,
-                  ],
+                  $delta => $js_settings,
                 ],
               ],
             ],

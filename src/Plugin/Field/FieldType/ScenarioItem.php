@@ -53,7 +53,8 @@ class ScenarioItem extends FieldItemBase {
       ->setRequired(TRUE);
 
     $properties['minus'] = DataDefinition::create('boolean')
-      ->setLabel(t('Subtraction allowed'));
+      ->setLabel(t('Subtraction allowed'))
+      ->setRequired(TRUE);
 
     $properties['count'] = DataDefinition::create('integer')
       ->setLabel(t('Number of numbers'))

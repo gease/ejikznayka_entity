@@ -3,7 +3,7 @@
   $.fn.ejikznayka = function (sequence = [], positions = [], options = {}, item = {}) {
     // Throw an error if sequence or positions is empty
     // or their lengths do not match.
-    if (!Array.isArray(sequence) || sequence.length === 0) {
+    if (options.store && (!Array.isArray(sequence) || sequence.length === 0)) {
       throw 'No sequence for ejikznayka.';
     }
     if (!Array.isArray(positions) || (positions.length !== sequence.length && positions.length !== 0)) {
@@ -36,16 +36,33 @@
       }
       return decoratedSeq;
     };
+    this.reset = function () {
+      this.state.current = 0;
+      if (!options.store) {
+        this.sequence = $.ejikznayka.generate(options);
+        this.positions = $.ejikznayka.generatePositions(options.count);
+      }
+      else if (!this.state.initiated) {
+        this.sequence = sequence;
+        this.positions = positions;
+      }
+      if (!options.store || !this.state.initiated) {
+        this.state.result = 0;
+        for (let i = 0; i < this.sequence.length; i++) {
+          this.state.result += +this.sequence[i];
+        }
+        this.decoratedSequence = decorateAll(this.sequence);
+      }
+      this.state.initiated = true;
+    };
     // Start setup.
     options = $.extend({}, $.fn.ejikznayka.defaults, options || {});
-    let state = {current: 0};
-    this.sequence = sequence;
-    let result = 0;
-    for (let i = 0; i < this.sequence.length; i++) {
-      result += this.sequence[i];
-    }
-    this.result = result;
-    const decoratedSequence = this.decoratedSequence = decorateAll(this.sequence);
+    this.state = {
+      current: 0,
+      result: 0,
+      initiated: false
+    };
+    this.reset();
     // Region variables.
     const $block = $(this).next('.overlay');
     const $controls = $block.children('.ejikznayka_controls');
@@ -64,17 +81,19 @@
     // Finish setup.
     const showResult = function () {
       $display.css('display', 'flex');
-      $controls.children('.start').css('display', 'block').val(Drupal.t('Repeat'));
+      if (options.store) {
+        $controls.children('.start').css('display', 'block').val(Drupal.t('Repeat'));
+      }
       $block.children('.ejikznayka_close').css('display', 'block');
       $controls.children().show();
       $controls.children('.input_answer').focus();
     };
-    const checkAnswer = function () {
+    const checkAnswer = function (self) {
       $display.children('.mark').css('display', 'block');
       const $check_answer_message = $display.children('.check_answer_message');
       const $correct_audio = $check_answer_message.children('.correct').children('audio');
       const $incorrect_audio = $check_answer_message.children('.incorrect').children('audio');
-      if ($controls.children('.input_answer').val() == result) {
+      if ($controls.children('.input_answer').val() == self.state.result) {
         $display.children('.your_answer').removeClass('incorrect').addClass('correct');
         $check_answer_message.children('.incorrect').css('display', 'none');
         $check_answer_message.children('.correct').css('display', 'block');
@@ -93,29 +112,29 @@
         }
       }
     };
-    const changeNumber = function () {
+    const changeNumber = function (self) {
       switch (options.column) {
         case 'single':
-          $show.html(decoratedSequence[state.current]);
+          $show.html(self.decoratedSequence[self.state.current]);
           break;
         case 'column':
-          $show.append('<br>' + decoratedSequence[state.current]);
+          $show.append('<br>' + self.decoratedSequence[self.state.current]);
           break;
         case 'line':
-          $show.append(decoratedSequence[state.current]);
+          $show.append(self.decoratedSequence[self.state.current]);
           break;
         default:
           break;
       }
       $show.addClass('new');
       if (options.random_location && options.column === 'single') {
-        $show.css('position', 'absolute').css(positions[state.current]);
+        $show.css('position', 'absolute').css(self.positions[self.state.current]);
       }
       setTimeout(function () {
         $show.removeClass('new');
       }, options.interval * 500);
-      if (++state.current < sequence.length) {
-        setTimeout(changeNumber, options.interval * 1000);
+      if (++self.state.current < self.sequence.length) {
+        setTimeout(changeNumber, options.interval * 1000, self);
       }
       else {
         setTimeout(function () {
@@ -134,6 +153,7 @@
       $display.children('.your_answer').removeClass('correct incorrect');
       $block.children('.ejikznayka_close').css('display', 'none');
     };
+    // @TODO What about detaching handlers?
     const attachHandlers = function () {
       $(this).click(function () {
         $block.css('display', 'flex');
@@ -141,28 +161,31 @@
       $block.children('.ejikznayka_close').click(function () {
         $block.css('display', 'none');
       });
-      $controls.children('.start').click(function () {
+      $controls.children('.start').click(this, function (event) {
+        let self = event.data;
         $display.children('.correct_answer').children('.correct_answer_placeholder').html('');
-        state.current = 0;
+        self.reset();
         // correct_answer.style.display = 'none';
         $controls.children('.input_answer').val('');
         $display.children(':not(".title")').hide();
         $show.html('').css('display', 'block');
         hideControls();
-        changeNumber();
+        changeNumber(self);
       });
-      $controls.children('.show_answer').click(function () {
-        $correct_answer_placeholder.html(result);
+      $controls.children('.show_answer').click(this, function (event) {
+        let self = event.data;
+        $correct_answer_placeholder.html(self.state.result);
         $correct_answer.css('display', 'block');
         $controls.children(':not(.start)').hide();
         $show.html('');
-        checkAnswer();
+        checkAnswer(self);
       });
-      $controls.children('.check_answer').click(function () {
+      $controls.children('.check_answer').click(this, function (event) {
+        let self = event.data;
         $display.children('.check_answer_message').css('display', 'block');
         $correct_answer.css('display', 'none');
         $show.html('');
-        checkAnswer();
+        checkAnswer(self);
       });
       $controls.children('.input_answer').blur(function () {
         const $your_answer = $display.children('.your_answer');
@@ -177,6 +200,7 @@
     attachHandlers.call(this);
   };
   $.fn.ejikznayka.defaults = {
+    store: false,
     interval: 1,
     random_location: false,
     keep: false,
