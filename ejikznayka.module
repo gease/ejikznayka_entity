@@ -114,6 +114,10 @@ function ejikznayka_theme($existing, $type, $theme, $path) {
     'ejikznayka_lesson_add_list' => [
       'variables' => ['content' => NULL],
     ],
+    'paragraph__ejikznayka_image_based' => [
+      'template' => 'paragraph--ejikznayka-image-based',
+      'base hook' => 'paragraph',
+    ],
   ];
 }
 

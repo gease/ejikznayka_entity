@@ -11,3 +11,14 @@ ejikznayka:
     - core/drupalSettings
     - core/jquery
     - core/jquery.once
+
+ejikznayka_image:
+  version: 1.x
+  js:
+    js/ejikznayka_image.js: {}
+  css:
+    component:
+      css/ejikznayka.css: {}
+
+  dependencies:
+    - core/jquery
