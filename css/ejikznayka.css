@@ -84,14 +84,10 @@ input[type='number'] {
 }
 
 /* Image-based paragraph */
-.overlay > div {
+.field--name-field-image-based-item .overlay > div {
   display: none;
 }
 
 .overlay .field--name-field-paragraph-image-based-text {
   font-size: 200px;
 }
-
-/*.overlay > div:first-of-type {
-  display: block;
-}*/
