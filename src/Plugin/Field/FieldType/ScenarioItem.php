@@ -19,6 +19,7 @@ use Drupal\ejikznayka\TypedData\DisplaySettingsDataDefinition;
  *   default_widget = "ejikznayka_scenario_default",
  *   default_formatter = "ejikznayka_scenario_play",
  *   constraints = {"Scenario" = {}},
+ *   list_class = "\Drupal\ejikznayka\Plugin\Field\FieldType\ScenarioItemList",
  * )
  */
 class ScenarioItem extends FieldItemBase {
@@ -60,10 +61,6 @@ class ScenarioItem extends FieldItemBase {
       ->setLabel(t('Number of numbers'))
       ->setRequired(TRUE);
 
-    $properties['display_settings'] = DisplaySettingsDataDefinition::create('ejikznayka_display_settings')
-      ->setLabel(t('Display settings'))
-      ->setRequired(TRUE);
-
     return $properties;
   }
 
@@ -101,11 +98,6 @@ class ScenarioItem extends FieldItemBase {
           'size' => 'tiny',
           'unsigned' => TRUE,
         ],
-        'display_settings' => [
-          'description' => "Serialized display settings",
-          'type' => 'blob',
-          'serialize' => TRUE,
-        ],
       ],
       'indexes' => [
         'title' => ['title'],
@@ -126,6 +118,14 @@ class ScenarioItem extends FieldItemBase {
       ];
     }
     return $schema;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function applyDefaultValue($notify = TRUE) {
+    $default = $this->getFieldDefinition()->getDefaultValue($this->getEntity());
+    $this->setValue($default[0]);
   }
 
   /**

@@ -45,16 +45,7 @@ class ScenarioDefaultWidget extends WidgetBase {
       '#required' => TRUE,
       '#default_value' => $items[$delta]->title,
     ];
-    $element['tabs'] = [
-      '#type' => 'vertical_tabs',
-      '#default_tab' => 'display_settings',
-    ];
-    $element['main'] = [
-      '#type' => 'details',
-      '#group' => 'tabs',
-      '#title' => $this->t('Main settings'),
-    ];
-    $element['main']['count'] = [
+    $element['count'] = [
       '#type' => 'number',
       '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('count')->getLabel(),
       '#size' => 3,
@@ -64,16 +55,12 @@ class ScenarioDefaultWidget extends WidgetBase {
       //  '#default_value' => $this->getSetting('count'),
       '#required' => TRUE,
     ];
-    $element['main']['minus'] = [
+    $element['minus'] = [
       '#type' => 'checkbox',
       '#title' => $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('minus')->getLabel(),
       '#default_value' => $items[$delta]->minus,
     ];
-    /*$element['range'] = [
-      '#type' => 'details',
-      '#group' => 'tabs',
-      '#title' => $this->t('Range of numbers'),*/
-    $element['main']['min'] = [
+    $element['min'] = [
       '#type' => 'number',
       '#title' => $this->t('From'),
       '#min' => 0,
@@ -83,7 +70,7 @@ class ScenarioDefaultWidget extends WidgetBase {
         'class' => ['ejikznayka-min'],
       ],
     ];
-    $element['main']['max'] = [
+    $element['max'] = [
       '#type' => 'number',
       '#title' => $this->t('To', [], ['context' => 'Range']),
       '#min' => 0,
@@ -94,13 +81,13 @@ class ScenarioDefaultWidget extends WidgetBase {
       ],
     ];
     if ($this->fieldDefinition->getSetting('store')) {
-      $element['main']['sequence'] = [
+      $element['sequence'] = [
         '#type' => 'textfield',
         '#title' => t('Sequence'),
         '#default_value' => $items[$delta]->sequence ? implode(',', $items[$delta]->sequence) : '',
         '#required' => TRUE,
       ];
-      $element['main']['generate'] = [
+      $element['generate'] = [
         '#type' => 'html_tag',
         '#tag' => 'input',
         '#attributes' => [
@@ -112,7 +99,6 @@ class ScenarioDefaultWidget extends WidgetBase {
             'form-item',
             $items->getName(),
             $delta,
-            'main',
           ])),
         ],
         '#attached' => [
@@ -122,66 +108,6 @@ class ScenarioDefaultWidget extends WidgetBase {
         ],
       ];
     }
-
-    /** @var \Drupal\ejikznayka\TypedData\DisplaySettingsDataDefinition $display_definition */
-    $display_definition = $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('display_settings');
-    $element['display_settings'] = [
-      '#type' => 'details',
-      '#group' => 'tabs',
-      '#title' => $display_definition->getLabel(),
-      'interval' => [
-        '#type' => 'number',
-        '#title' => $display_definition->getPropertyDefinition('interval')->getLabel(),
-        '#size' => 3,
-        '#step' => 0.1,
-        '#min' => 0.1,
-        '#max' => 5,
-        '#default_value' => $items[$delta]->get('display_settings')->get('interval')->getValue(),
-        '#required' => TRUE,
-      ],
-      'font_size' => [
-        '#type' => 'number',
-        '#title' => $display_definition->getPropertyDefinition('font_size')->getLabel(),
-        '#step' => 4,
-        '#min' => 20,
-        '#max' => 100,
-        '#default_value' => $items[$delta]->get('display_settings')->get('font_size')->getValue(),
-        '#required' => TRUE,
-      ],
-      'column' => [
-        '#type' => 'radios',
-        '#title' => $display_definition->getPropertyDefinition('column')->getLabel(),
-        '#options' => [
-          'single' => $this->t('By one'),
-          'column' => $this->t('In column'),
-          'line' => $this->t('In line'),
-        ],
-        '#default_value' => $items[$delta]->get('display_settings')->get('column')->getValue(),
-        '#required' => TRUE,
-      ],
-      'keep' => [
-        '#type' => 'checkbox',
-        '#title' => $display_definition->getPropertyDefinition('keep')->getLabel(),
-        '#description' => $this->t("Doesn't have any effect if numbers are displayed by one"),
-        '#default_value' => $items[$delta]->get('display_settings')->get('keep')->getValue(),
-        '#states' => [
-          'invisible' => [
-            ':input[name="' . $items->getName() . '[' . $delta . '][display_settings][column]"]' => ['value' => 'single'],
-          ],
-        ],
-      ],
-      'random_location' => [
-        '#type' => 'checkbox',
-        '#title' => $display_definition->getPropertyDefinition('random_location')->getLabel(),
-        '#description' => $this->t("Doesn't have any effect if numbers are displayed in column"),
-        '#default_value' => $items[$delta]->get('display_settings')->get('random_location')->getValue(),
-        '#states' => [
-          'visible' => [
-            ':input[name="' . $items->getName() . '[' . $delta . '][display_settings][column]"]' => ['value' => 'single'],
-          ],
-        ],
-      ],
-    ];
     if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       $element['remove'] = [
         '#type' => 'submit',
@@ -233,6 +159,7 @@ class ScenarioDefaultWidget extends WidgetBase {
 
       if (!isset($items[$delta])) {
         $items->appendItem();
+        $items[$delta]->applyDefaultValue(TRUE);
       }
 
       // For multiple fields, title and description are handled by the wrapping
@@ -353,14 +280,13 @@ class ScenarioDefaultWidget extends WidgetBase {
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as $delta => $item_values) {
       $return_values[$delta]['title'] = $item_values['title'];
-      $return_values[$delta]['minus'] = (bool) $item_values['main']['minus'];
-      $return_values[$delta]['max'] = $item_values['main']['max'];
-      $return_values[$delta]['min'] = $item_values['main']['min'];
-      $return_values[$delta]['count'] = $item_values['main']['count'];
-      $return_values[$delta]['display_settings'] = $item_values['display_settings'];
+      $return_values[$delta]['minus'] = (bool) $item_values['minus'];
+      $return_values[$delta]['max'] = $item_values['max'];
+      $return_values[$delta]['min'] = $item_values['min'];
+      $return_values[$delta]['count'] = $item_values['count'];
       if ($this->fieldDefinition->getSetting('store')) {
         $positions = [];
-        for ($i = 0; $i < $item_values['main']['count']; $i++) {
+        for ($i = 0; $i < $item_values['count']; $i++) {
           // Generate random position.
           $position = [];
           $top = mt_rand(0, 50);
@@ -383,7 +309,7 @@ class ScenarioDefaultWidget extends WidgetBase {
           }
           $positions[] = $position;
         }
-        $return_values[$delta]['sequence'] = explode(',', $item_values['main']['sequence']);
+        $return_values[$delta]['sequence'] = explode(',', $item_values['sequence']);
         $return_values[$delta]['positions'] = $positions;
       }
     }

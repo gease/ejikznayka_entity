@@ -260,6 +260,14 @@ class Lesson extends ContentEntityBase implements LessonInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
 
+    $fields['display_settings'] = BaseFieldDefinition::create('ejikznayka_display_settings')
+      ->setLabel(t('Display settings'))
+      ->setDescription(t('Display settings for the tasks of the lesson.'))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'weight' => 10,
+      ]);
+
     return $fields;
   }
 }

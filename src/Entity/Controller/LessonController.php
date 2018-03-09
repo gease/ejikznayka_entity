@@ -21,8 +21,8 @@ class LessonController extends ControllerBase {
    *   The lesson add form.
    */
   public function addForm(LessonType $ejikznayka_lesson_type) {
-    $term = $this->entityManager()->getStorage('ejikznayka_lesson')->create(['ejtid' => $ejikznayka_lesson_type->id()]);
-    return $this->entityFormBuilder()->getForm($term);
+    $lesson = $this->entityManager()->getStorage('ejikznayka_lesson')->create(['ejtid' => $ejikznayka_lesson_type->id()]);
+    return $this->entityFormBuilder()->getForm($lesson);
   }
 
   /**
