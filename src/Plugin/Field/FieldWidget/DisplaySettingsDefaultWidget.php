@@ -30,7 +30,7 @@ class DisplaySettingsDefaultWidget extends WidgetBase{
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\ejikznayka\TypedData\DisplaySettingsDataDefinition $display_definition */
-    $display_definition = $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition('display_settings');
+    $display_definition = $this->fieldDefinition->getFieldStorageDefinition();
     $element = [
       'interval' => [
         '#type' => 'number',
@@ -39,7 +39,7 @@ class DisplaySettingsDefaultWidget extends WidgetBase{
         '#step' => 0.1,
         '#min' => 0.1,
         '#max' => 5,
-        '#default_value' => $items[$delta]->get('display_settings')->get('interval')->getValue(),
+        '#default_value' => $items[$delta]->get('interval')->getValue(),
         '#required' => TRUE,
       ],
       'font_size' => [
@@ -48,7 +48,7 @@ class DisplaySettingsDefaultWidget extends WidgetBase{
         '#step' => 4,
         '#min' => 20,
         '#max' => 100,
-        '#default_value' => $items[$delta]->get('display_settings')->get('font_size')->getValue(),
+        '#default_value' => $items[$delta]->get('font_size')->getValue(),
         '#required' => TRUE,
       ],
       'column' => [
@@ -59,14 +59,14 @@ class DisplaySettingsDefaultWidget extends WidgetBase{
           'column' => $this->t('In column'),
           'line' => $this->t('In line'),
         ],
-        '#default_value' => $items[$delta]->get('display_settings')->get('column')->getValue(),
+        '#default_value' => $items[$delta]->get('column')->getValue(),
         '#required' => TRUE,
       ],
       'keep' => [
         '#type' => 'checkbox',
         '#title' => $display_definition->getPropertyDefinition('keep')->getLabel(),
         '#description' => $this->t("Doesn't have any effect if numbers are displayed by one"),
-        '#default_value' => $items[$delta]->get('display_settings')->get('keep')->getValue(),
+        '#default_value' => $items[$delta]->get('keep')->getValue(),
         '#states' => [
           'invisible' => [
             ':input[name="' . $items->getName() . '[' . $delta . '][column]"]' => ['value' => 'single'],
@@ -77,7 +77,7 @@ class DisplaySettingsDefaultWidget extends WidgetBase{
         '#type' => 'checkbox',
         '#title' => $display_definition->getPropertyDefinition('random_location')->getLabel(),
         '#description' => $this->t("Doesn't have any effect if numbers are displayed in column"),
-        '#default_value' => $items[$delta]->get('display_settings')->get('random_location')->getValue(),
+        '#default_value' => $items[$delta]->get('random_location')->getValue(),
         '#states' => [
           'visible' => [
             ':input[name="' . $items->getName() . '[' . $delta . '][column]"]' => ['value' => 'single'],
@@ -86,6 +86,18 @@ class DisplaySettingsDefaultWidget extends WidgetBase{
       ],
     ];
     return $element;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    foreach ($values as $delta => $item_values) {
+      foreach (['interval', 'font_size', 'column', 'keep', 'random_location'] as $key) {
+        $return_values[$delta][$key] = $item_values[$key];
+      }
+    }
+    return $return_values;
   }
 
 }

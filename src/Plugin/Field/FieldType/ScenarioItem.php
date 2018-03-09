@@ -125,7 +125,9 @@ class ScenarioItem extends FieldItemBase {
    */
   public function applyDefaultValue($notify = TRUE) {
     $default = $this->getFieldDefinition()->getDefaultValue($this->getEntity());
-    $this->setValue($default[0]);
+    if (!empty($default)) {
+      $this->setValue($default[0]);
+    }
   }
 
   /**
