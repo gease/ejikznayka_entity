@@ -26,18 +26,23 @@ class ScenarioPlayFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
+    /** @var $display_settings \Drupal\ejikznayka\Plugin\Field\FieldType\DisplaySettings */
+    $display_settings = $items->getEntity()->get('display_settings')[0]->getValue();
+    if (is_null($display_settings)) {
+      throw new \Exception('Scenario out of lesson context.');
+    }
     /** @var \Drupal\Core\TypedData\Plugin\DataType\ItemList $items */
     foreach ($items as $delta => $item) {
       $js_config = [
         'store' => (bool) $item->getFieldDefinition()->getSetting('store'),
         'count' => $item->count,
-        'interval' => $item->display_settings['interval'],
+        'interval' => $display_settings['interval'],
         'minus' => (bool) $item->minus,
-        'keep' => ($item->display_settings['column'] == 'single' ? FALSE : $item->display_settings['keep']),
-        'random_location' => $item->display_settings['random_location'],
+        'keep' => ($display_settings['column'] == 'single' ? FALSE : $display_settings['keep']),
+        'random_location' => $display_settings['random_location'],
 //        'mark' => $config['mark'],
-        'column' => $item->display_settings['column'],
-        'font_size' => $item->display_settings['font_size'],
+        'column' => $display_settings['column'],
+        'font_size' => $display_settings['font_size'],
       ];
       $js_settings = [];
       $js_settings['options'] = $js_config;
