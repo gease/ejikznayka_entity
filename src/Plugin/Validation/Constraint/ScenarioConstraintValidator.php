@@ -76,6 +76,9 @@ class ScenarioConstraintValidator extends ConstraintValidator {
    */
   private function validateRange($value, Constraint $constraint) {
     $violations = [];
+    if (empty($value->sequence)) {
+      return $this->context->buildViolation('Empty sequence');
+    }
     foreach ($value->sequence as $sequence_item) {
       $abs = abs($sequence_item);
       if ($abs < $value->min || $abs > $value->max) {

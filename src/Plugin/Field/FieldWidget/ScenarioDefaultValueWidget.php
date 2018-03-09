@@ -79,21 +79,25 @@ class ScenarioDefaultValueWidget extends WidgetBase {
     $field_name = $this->fieldDefinition->getName();
     $parents = $form['#parents'];
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
+    $max = $cardinality > 1 ? $cardinality : 1;
 
     $title = $this->fieldDefinition->getLabel();
     $description = FieldFilteredMarkup::create(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
-    $is_multiple = ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) || (count($items) > 1);
 
     $elements = [];
 
-    for ($delta = 0; $delta < count($items); $delta++) {
 
+
+    for ($delta = 0; $delta < $max; $delta++) {
+      if (!isset($items[$delta])) {
+        $items->appendItem();
+      }
       // For multiple fields, title and description are handled by the wrapping
       // table.
-      if ($is_multiple) {
+      if ($max > 1) {
         $element = [
           '#title' => $this->t('@title (value @number)', ['@title' => $title, '@number' => $delta + 1]),
-          '#title_display' => 'invisible',
+          '#title_display' => 'before',
           '#description' => '',
         ];
       }
@@ -109,7 +113,7 @@ class ScenarioDefaultValueWidget extends WidgetBase {
 
       if ($element) {
         // Input field for the delta (drag-n-drop reordering).
-        if ($is_multiple) {
+        if ($max > 1) {
           // We name the element '_weight' to avoid clashing with elements
           // defined by widget.
           $element['_weight'] = [
