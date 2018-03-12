@@ -60,5 +60,5 @@ class ScenarioItemList extends FieldItemList {
 
     return $form_state->get('default_value_widget');
   }
-  
+
 }

@@ -9,6 +9,7 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\Url;
+use Drupal\Core\Render\Element;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -118,6 +119,9 @@ function ejikznayka_theme($existing, $type, $theme, $path) {
       'template' => 'paragraph--ejikznayka-image-based',
       'base hook' => 'paragraph',
     ],
+    'ejikznayka_lesson' => [
+        'render element' => 'elements',
+    ],
   ];
 }
 
@@ -145,4 +149,19 @@ function template_preprocess_ejikznayka_lesson_add_list(&$variables) {
       ];
     }
   }
+}
+
+function template_preprocess_ejikznayka_lesson(&$variables) {
+  $variables['#attached'] = [
+    'drupalSettings' => [
+      'ejikznayka' => [
+        'display_settings' => $variables['elements']['#ejikznayka_lesson']->get('display_settings')[0]->getValue(),
+      ],
+
+    ],
+  ];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+  $variables['attributes']['class'] = $variables['elements']['#ejikznayka_lesson']->bundle();
 }

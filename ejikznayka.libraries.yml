@@ -22,3 +22,4 @@ ejikznayka_image:
 
   dependencies:
     - core/jquery
+    - core/drupalSettings

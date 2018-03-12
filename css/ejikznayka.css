@@ -84,10 +84,30 @@ input[type='number'] {
 }
 
 /* Image-based paragraph */
-.field--name-field-image-based-item .overlay > div {
+/*.field--name-field-image-based-item .overlay > div {
   display: none;
 }
 
 .overlay .field--name-field-paragraph-image-based-text {
   font-size: 200px;
+}*/
+
+.overlay .field--name-field-paragraph-image-based-text {
+  position: absolute;
+}
+
+.overlay .ejikznayka-bottom {
+  bottom: 20%;
+}
+
+.overlay .ejikznayka-top {
+  top: 20%
+}
+
+.overlay .ejikznayka-left {
+  left: 20%;
+}
+
+.overlay .ejikznayka-right {
+  right: 20%;
 }
