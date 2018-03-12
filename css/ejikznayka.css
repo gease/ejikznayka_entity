@@ -92,22 +92,26 @@ input[type='number'] {
   font-size: 200px;
 }*/
 
-.overlay .field--name-field-paragraph-image-based-text {
+.overlay .field--name-field-paragraph-image-based-text,
+.overlay .field--name-field-paragraph-image-based-tex1,
+.overlay .field--name-field-paragraph-image-based-tex2,
+.overlay .field--name-field-paragraph-image-based-tex3
+{
   position: absolute;
 }
 
 .overlay .ejikznayka-bottom {
-  bottom: 20%;
+  bottom: 10%;
 }
 
 .overlay .ejikznayka-top {
-  top: 20%
+  top: 10%
 }
 
 .overlay .ejikznayka-left {
-  left: 20%;
+  left: 10%;
 }
 
 .overlay .ejikznayka-right {
-  right: 20%;
+  right: 10%;
 }
